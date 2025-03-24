@@ -1,0 +1,50 @@
+default:
+    @just --list
+
+# Delete build artifacts
+clean:
+    cargo clean
+    rm -rf static
+
+# Build the code
+build:
+    cargo build
+
+# Build the code for release
+build-release:
+    cargo build --release
+
+# Check linters against code
+lint:
+    cargo clippy --workspace --all-targets --all-features -- -D warnings -W clippy::all
+
+# Automatically fix linting errors in code
+lint-fix:
+    cargo clippy --workspace --all-targets --all-features --fix -- -D warnings -W clippy::all
+
+# Format code
+format:
+    cargo fmt --all
+    just lint-fix
+
+# Check that the code is formatted correctly
+format-check:
+    cargo fmt --all -- --check
+
+# Run all non-test checks against code
+check:
+    cargo check --workspace --all-targets
+    just format-check
+    just lint
+
+# Run all checks, tests, and build the code
+verify:
+    just build && just check && just test
+
+# Run all tests
+test:
+    cargo test --workspace --all-targets --all-features
+
+# Alias for the diesel command
+db *args='help':
+    diesel {{args}}

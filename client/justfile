@@ -1,0 +1,53 @@
+default:
+    @just --list
+
+# Delete build artifacts
+clean:
+    rm -rf dist
+
+# Build the code
+build: clean
+    npm run build
+    just copy-client-assets-to-server-static
+
+# Build the code for release
+build-release: clean
+    npm run build
+    just copy-client-assets-to-server-static
+
+# Copy client build artifacts to server's static directory
+copy-client-assets-to-server-static:
+    cp -a ./dist/. ../server/static
+
+# Build and watch for changes
+watch:
+    echo 'Do not use this command. Run `just watch` from root instead'
+
+# Check linters against code
+lint:
+    echo 'No lint installed'
+
+# Automatically fix linting errors in code
+lint-fix:
+    echo 'No lint installed'
+
+# Format code
+format:
+    echo 'No formatter installed'
+
+# Check that the code is formatted correctly
+format-check:
+    echo 'No formatter installed'
+
+# Run all non-test checks against code
+check:
+    just format-check
+    just lint
+
+# Run all checks, tests, and build the code
+verify:
+    just build && just check && just test
+
+# Run all tests
+test:
+    npm run test

@@ -1,0 +1,15 @@
+[package]
+name = "types"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ts-rs = "10.1"
+
+[features]
+bundle_types = []
+
+[[bin]]
+name = "bundle_types"
+path = "src/bin/bundle.rs"
+required-features = ["bundle_types"]
