@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use axum::Router;
+use axum::{Json, Router, http::StatusCode, routing::get};
 
 use clap::Parser;
 #[cfg(not(feature = "development_mode"))]
@@ -10,6 +10,7 @@ use server::Error;
 use tower_http::services::ServeDir;
 #[cfg(not(feature = "development_mode"))]
 use tower_serve_static::ServeDir as StaticServeDir;
+use types::KeyValue;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -46,6 +47,7 @@ async fn main() -> Result<(), Error> {
     }
 
     let app = Router::new()
+        .route("/api/values", get(get_values))
         .fallback_service(static_dir.clone())
         .with_state(state);
 
@@ -63,3 +65,10 @@ struct Args {
 
 #[derive(Clone)]
 struct AppState {}
+
+async fn get_values() -> (StatusCode, Json<Vec<KeyValue>>) {
+    (
+        StatusCode::OK,
+        Json(vec![KeyValue::new("test-key", "test value")]),
+    )
+}

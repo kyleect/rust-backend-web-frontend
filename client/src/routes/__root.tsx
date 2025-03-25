@@ -22,6 +22,15 @@ export const Route = createRootRoute({
               style: { fontWeight: "bold" },
             }}
           />
+
+          <NavLink
+            label="Values"
+            component={Link}
+            to="/values"
+            activeProps={{
+              style: { fontWeight: "bold" },
+            }}
+          />
         </AppShell.Navbar>
 
         <AppShell.Main>

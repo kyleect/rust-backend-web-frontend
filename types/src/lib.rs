@@ -1,17 +1,27 @@
 use std::fmt::Display;
 
+use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 /// A key value pair
-#[derive(TS)]
+#[derive(TS, Debug, Serialize, Deserialize)]
 #[ts(export)]
 pub struct KeyValue {
     pub key: Key,
     pub value: Value,
 }
 
+impl KeyValue {
+    pub fn new(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+        KeyValue {
+            key: key.into(),
+            value: value.into(),
+        }
+    }
+}
+
 /// String key value
-#[derive(TS)]
+#[derive(TS, Debug, Serialize, Deserialize)]
 #[ts(export)]
 pub struct Key(String);
 
@@ -28,7 +38,7 @@ impl From<&str> for Key {
 }
 
 /// String value
-#[derive(TS)]
+#[derive(TS, Debug, Serialize, Deserialize)]
 #[ts(export)]
 pub struct Value(String);
 
