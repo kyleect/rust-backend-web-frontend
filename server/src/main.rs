@@ -1,6 +1,11 @@
 use std::sync::Arc;
 
-use axum::{Json, Router, http::StatusCode, routing::get};
+use axum::{
+    Json, Router,
+    extract::{Path, State},
+    http::StatusCode,
+    routing::get,
+};
 
 use clap::Parser;
 #[cfg(not(feature = "development_mode"))]
@@ -34,7 +39,18 @@ async fn main() -> Result<(), Error> {
         StaticServeDir::new(&ASSETS_DIR)
     };
 
-    let state = Arc::new(AppState {});
+    let state = Arc::new(AppState {
+        data: vec![
+            KeyValue::new("test-key", "test value"),
+            KeyValue::new("test-key2", "test value 2"),
+            KeyValue::new("test-key3", "test value 3"),
+            KeyValue::new("test-key4", "test value 4"),
+            KeyValue::new("test-key5", "test value 5"),
+            KeyValue::new("test-key6", "test value 6"),
+            KeyValue::new("test-key7", "test value 7"),
+            KeyValue::new("test-key8", "test value 8"),
+        ],
+    });
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
     let addr = listener.local_addr()?;
@@ -48,6 +64,7 @@ async fn main() -> Result<(), Error> {
 
     let app = Router::new()
         .route("/api/values", get(get_values))
+        .route("/api/values/{key}", get(get_value))
         .fallback_service(static_dir.clone())
         .with_state(state);
 
@@ -64,11 +81,24 @@ struct Args {
 }
 
 #[derive(Clone)]
-struct AppState {}
+struct AppState {
+    data: Vec<KeyValue>,
+}
 
-async fn get_values() -> (StatusCode, Json<Vec<KeyValue>>) {
-    (
-        StatusCode::OK,
-        Json(vec![KeyValue::new("test-key", "test value")]),
-    )
+async fn get_values(State(state): State<Arc<AppState>>) -> (StatusCode, Json<Vec<KeyValue>>) {
+    (StatusCode::OK, Json(state.data.clone()))
+}
+
+async fn get_value(
+    State(state): State<Arc<AppState>>,
+    Path(key): Path<String>,
+) -> (StatusCode, Json<KeyValue>) {
+    let result = state
+        .data
+        .clone()
+        .into_iter()
+        .find(|x| x.key == key.as_str().into())
+        .expect("No value with specified key found");
+
+    (StatusCode::OK, Json(result))
 }

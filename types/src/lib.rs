@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 /// A key value pair
-#[derive(TS, Debug, Serialize, Deserialize)]
+#[derive(TS, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[ts(export)]
 pub struct KeyValue {
     pub key: Key,
@@ -21,7 +21,7 @@ impl KeyValue {
 }
 
 /// String key value
-#[derive(TS, Debug, Serialize, Deserialize)]
+#[derive(TS, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[ts(export)]
 pub struct Key(String);
 
@@ -38,7 +38,7 @@ impl From<&str> for Key {
 }
 
 /// String value
-#[derive(TS, Debug, Serialize, Deserialize)]
+#[derive(TS, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[ts(export)]
 pub struct Value(String);
 

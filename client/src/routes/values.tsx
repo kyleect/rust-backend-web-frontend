@@ -1,6 +1,11 @@
-import { Table } from "@mantine/core";
+import { ScrollArea, Table } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useMatch,
+} from "@tanstack/react-router";
 import { KeyValue } from "server-types";
 
 export const Route = createFileRoute("/values")({
@@ -8,8 +13,11 @@ export const Route = createFileRoute("/values")({
 });
 
 function RouteComponent() {
+  const match = useMatch({ from: "/values/$key", shouldThrow: false });
+  const subViewIsRendering = typeof match !== "undefined";
+
   const values = useQuery({
-    queryKey: ["filesOnDisk"],
+    queryKey: ["values"],
     queryFn: async () => {
       const response = await fetch("/api/values");
       const data = (await response.json()) as KeyValue[];
@@ -26,7 +34,7 @@ function RouteComponent() {
     return <p>Error: {values.error.message}</p>;
   }
 
-  return (
+  const table = (
     <Table>
       <Table.Thead>
         <Table.Tr>
@@ -37,11 +45,33 @@ function RouteComponent() {
       <Table.Tbody>
         {values.data?.map((value) => (
           <Table.Tr key={value.key}>
-            <Table.Td>{value.key}</Table.Td>
+            <Table.Td>
+              <Link
+                to="/values/$key"
+                params={{ key: value.key }}
+                activeProps={{
+                  style: {
+                    fontWeight: "bold",
+                  },
+                }}
+              >
+                {value.key}
+              </Link>
+            </Table.Td>
             <Table.Td>{value.value}</Table.Td>
           </Table.Tr>
         ))}
       </Table.Tbody>
     </Table>
+  );
+
+  return subViewIsRendering ? (
+    <>
+      <ScrollArea.Autosize mah={250}>{table}</ScrollArea.Autosize>
+
+      <Outlet />
+    </>
+  ) : (
+    table
   );
 }

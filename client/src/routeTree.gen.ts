@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ValuesImport } from './routes/values'
 import { Route as IndexImport } from './routes/index'
+import { Route as ValuesKeyImport } from './routes/values.$key'
 
 // Create/Update Routes
 
@@ -26,6 +27,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const ValuesKeyRoute = ValuesKeyImport.update({
+  id: '/$key',
+  path: '/$key',
+  getParentRoute: () => ValuesRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -46,44 +53,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ValuesImport
       parentRoute: typeof rootRoute
     }
+    '/values/$key': {
+      id: '/values/$key'
+      path: '/$key'
+      fullPath: '/values/$key'
+      preLoaderRoute: typeof ValuesKeyImport
+      parentRoute: typeof ValuesImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ValuesRouteChildren {
+  ValuesKeyRoute: typeof ValuesKeyRoute
+}
+
+const ValuesRouteChildren: ValuesRouteChildren = {
+  ValuesKeyRoute: ValuesKeyRoute,
+}
+
+const ValuesRouteWithChildren =
+  ValuesRoute._addFileChildren(ValuesRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/values': typeof ValuesRoute
+  '/values': typeof ValuesRouteWithChildren
+  '/values/$key': typeof ValuesKeyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/values': typeof ValuesRoute
+  '/values': typeof ValuesRouteWithChildren
+  '/values/$key': typeof ValuesKeyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/values': typeof ValuesRoute
+  '/values': typeof ValuesRouteWithChildren
+  '/values/$key': typeof ValuesKeyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/values'
+  fullPaths: '/' | '/values' | '/values/$key'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/values'
-  id: '__root__' | '/' | '/values'
+  to: '/' | '/values' | '/values/$key'
+  id: '__root__' | '/' | '/values' | '/values/$key'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ValuesRoute: typeof ValuesRoute
+  ValuesRoute: typeof ValuesRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ValuesRoute: ValuesRoute,
+  ValuesRoute: ValuesRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -104,7 +132,14 @@ export const routeTree = rootRoute
       "filePath": "index.tsx"
     },
     "/values": {
-      "filePath": "values.tsx"
+      "filePath": "values.tsx",
+      "children": [
+        "/values/$key"
+      ]
+    },
+    "/values/$key": {
+      "filePath": "values.$key.tsx",
+      "parent": "/values"
     }
   }
 }
