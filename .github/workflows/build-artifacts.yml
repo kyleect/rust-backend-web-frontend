@@ -63,7 +63,7 @@ jobs:
         with:
           tool: just
       - name: Build
-        run: just build_release
+        run: just build-release
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
@@ -97,7 +97,7 @@ jobs:
         with:
           tool: just
       - name: Build
-        run: just build_release
+        run: just build-release
       - name: Upload CLI Binary
         uses: actions/upload-artifact@v4
         with:
@@ -131,7 +131,7 @@ jobs:
         with:
           tool: just
       - name: Build
-        run: just build_release
+        run: just build-release
       - name: Upload CLI Binary
         uses: actions/upload-artifact@v4
         with:
