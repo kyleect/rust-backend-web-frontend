@@ -16,8 +16,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: |
+            types/package-lock.json
+            client/package-lock.json
           node-version: 20
+      - name: "Install NPM Deps: types"
+        working-directory: types
+        run: npm ci
+      - name: "Install NPM Deps: client"
+        working-directory: client
+        run: npm ci
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
