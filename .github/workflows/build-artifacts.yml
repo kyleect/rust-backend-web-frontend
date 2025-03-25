@@ -67,8 +67,8 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: rust-web-app
-          path: target/release/rust-web-app
+          name: rust-web-app (ubuntu)
+          path: target/release/server
   build-mac:
     runs-on: macos-latest
     needs: [verify]
@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-web-app (macos)
-          path: target/release/rust-web-app
+          path: target/release/server
   build-windows:
     runs-on: windows-latest
     needs: [verify]
@@ -136,4 +136,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rust-web-app.exe
-          path: target/release/rust-web-app.exe
+          path: target/release/server.exe
