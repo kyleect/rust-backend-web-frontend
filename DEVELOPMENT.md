@@ -1,0 +1,96 @@
+# Development Guide
+
+This document provides guidance for developers looking to contribute to the `rust-backend-web-frontend` project. It outlines how to set up the project, build it, and run tests.
+
+## Prerequisites
+
+- [Rust](https://www.rust-lang.org/) (with support for clippy, rustfmt, and the stable toolchain)
+- [Node.js](https://nodejs.org/) and npm
+- [Just](https://github.com/casey/just), a command runner
+
+## Project Structure
+
+- **types:** Shared types used by `server` and `client`
+- **server:** Backend/API server for `client` served at `localhost:{port}/api`. It also statically serves `client` at `localhost:{port}/`.
+- **client:** Frontend client that calls `server`.
+
+## Setting Up
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/your-repo/rust-backend-web-frontend.git
+   cd rust-backend-web-frontend
+   ```
+
+2. **Install Node.js Dependencies for Client and Types:**
+
+   ```bash
+   cd client
+   npm ci
+   cd ../types
+   npm ci
+   ```
+
+3. **Install Rust Dependencies:**
+   You don't need to manually install dependencies for Rust; they're managed automatically when you build using Cargo.
+
+## Building the Project
+
+To build the project, use Justfile commands:
+
+- **Build the entire project:**
+
+  ```bash
+  just build
+  ```
+
+- **Build for release:**
+
+  This optimizes the build for production.
+
+  ```bash
+  just build-release
+  ```
+
+## Running the Project
+
+- **Start the server and client in development mode:**
+  ```bash
+  just watch
+  ```
+  This will watch for changes and rebuild the client automatically.
+
+## Testing
+
+- **Run all tests:**
+
+  ```bash
+  just test
+  ```
+
+## Linting and Formatting
+
+- **Lint the code:**
+
+  ```bash
+  just lint
+  ```
+
+- **Automatically fix linting errors:**
+
+  ```bash
+  just lint-fix
+  ```
+
+- **Format the code:**
+  ```bash
+  just format
+  ```
+
+## Contributing
+
+1. Fork the repository and clone your fork.
+2. Create a feature branch from `main`.
+3. Make your changes and commit them.
+4. Push your branch and open a pull request against `main`.

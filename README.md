@@ -2,6 +2,10 @@
 
 Template for a backend API in Rust statically serving a frontend in React.
 
+## Getting Started
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for instructions on how to set up the project.
+
 ## Ideal For
 
 - Development or testing tools
