@@ -8,7 +8,8 @@
     "watch-routes": "tsr watch",
     "dev": "npm run watch-routes && vite",
     "test": "vitest run",
-    "build": "npm run generate-routes && tsc -b && vite build",
+    "build": "npm run generate-routes && tsc -b && vite build --mode development",
+    "build-release": "npm run generate-routes && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

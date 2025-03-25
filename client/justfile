@@ -12,7 +12,7 @@ build: clean
 
 # Build the code for release
 build-release: clean
-    npm run build
+    npm run build-release
     just copy-client-assets-to-server-static
 
 # Copy client build artifacts to server's static directory
