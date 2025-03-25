@@ -11,6 +11,7 @@ use clap::Parser;
 #[cfg(not(feature = "development_mode"))]
 use include_dir::{Dir, include_dir};
 use server::Error;
+use tower_http::compression::CompressionLayer;
 #[cfg(feature = "development_mode")]
 use tower_http::services::ServeDir;
 #[cfg(not(feature = "development_mode"))]
@@ -86,11 +87,15 @@ async fn main() -> Result<(), Error> {
         webbrowser::open(&url)?;
     }
 
+    let compression_layer: CompressionLayer =
+        CompressionLayer::new().br(true).deflate(true).gzip(true);
+
     let app = Router::new()
         .route("/api/values", get(get_values))
         .route("/api/values/{key}", get(get_value))
         .fallback_service(static_dir.clone())
-        .with_state(state);
+        .with_state(state)
+        .layer(compression_layer);
 
     axum::serve(listener, app).await?;
 
