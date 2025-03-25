@@ -1,4 +1,5 @@
-import { ScrollArea, Table } from "@mantine/core";
+import { Grid, ScrollArea, Table, Title } from "@mantine/core";
+import { useScrollIntoView } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -14,6 +15,10 @@ export const Route = createFileRoute("/values")({
 
 function RouteComponent() {
   const match = useMatch({ from: "/values/$key", shouldThrow: false });
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    duration: 250,
+  });
+
   const subViewIsRendering = typeof match !== "undefined";
 
   const values = useQuery({
@@ -36,12 +41,6 @@ function RouteComponent() {
 
   const table = (
     <Table>
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>Name</Table.Th>
-          <Table.Th>Value</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
       <Table.Tbody>
         {values.data?.map((value) => (
           <Table.Tr key={value.key}>
@@ -54,24 +53,37 @@ function RouteComponent() {
                     fontWeight: "bold",
                   },
                 }}
+                onClick={() => {
+                  scrollIntoView();
+                }}
               >
                 {value.key}
               </Link>
             </Table.Td>
-            <Table.Td>{value.value}</Table.Td>
           </Table.Tr>
         ))}
       </Table.Tbody>
     </Table>
   );
 
-  return subViewIsRendering ? (
+  return (
     <>
-      <ScrollArea.Autosize mah={250}>{table}</ScrollArea.Autosize>
+      <Title order={2}>Values</Title>
+      <ScrollArea.Autosize>
+        {subViewIsRendering ? (
+          <Grid>
+            <Grid.Col span={{ base: 2 }}>{table}</Grid.Col>
 
-      <Outlet />
+            <Grid.Col span={{ base: 10 }}>
+              <div ref={targetRef}>
+                <Outlet />
+              </div>
+            </Grid.Col>
+          </Grid>
+        ) : (
+          table
+        )}
+      </ScrollArea.Autosize>
     </>
-  ) : (
-    table
   );
 }
