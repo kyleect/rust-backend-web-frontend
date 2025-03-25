@@ -4,7 +4,7 @@ Template for a backend API in Rust statically serving a frontend in React.
 
 ## Ideal For
 
-- Ok to run on localhost:`port`
+- Ok to run on `localhost:{port}`
 - Writing development or testing tools
 
 ## Not Ideal For
