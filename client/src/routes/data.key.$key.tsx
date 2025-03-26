@@ -35,7 +35,7 @@ function RouteComponent() {
 
   const deleteKeyValue = useMutation({
     mutationFn: async (key: string) => {
-      await fetch(`api/data/${key}`, {
+      await fetch(`/api/data/${key}`, {
         method: "DELETE",
       });
 

@@ -42,7 +42,7 @@ function RouteComponent() {
         value,
       };
 
-      await fetch(`api/data/${key}`, {
+      await fetch(`/api/data/${key}`, {
         method: "PUT",
         body: JSON.stringify(body),
         headers: {
