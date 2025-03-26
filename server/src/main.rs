@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use axum::{
     Json, Router,
@@ -40,7 +40,7 @@ async fn main() -> Result<(), Error> {
         StaticServeDir::new(&ASSETS_DIR)
     };
 
-    let state = Arc::new(AppState {
+    let state = Arc::new(Mutex::new(AppState {
         data: vec![
             KeyValue::new("test-key", "test value"),
             KeyValue::new("test-key2", "test value 2"),
@@ -75,7 +75,7 @@ async fn main() -> Result<(), Error> {
             KeyValue::new("test-keyd7", "test valued 7"),
             KeyValue::new("test-keyd8", "test valued 8"),
         ],
-    });
+    }));
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
     let addr = listener.local_addr()?;
@@ -92,7 +92,7 @@ async fn main() -> Result<(), Error> {
 
     let app = Router::new()
         .route("/api/values", get(get_values))
-        .route("/api/values/{key}", get(get_value))
+        .route("/api/values/{key}", get(get_value).put(update_value))
         .fallback_service(static_dir.clone())
         .with_state(state)
         .layer(compression_layer);
@@ -114,14 +114,22 @@ struct AppState {
     data: Vec<KeyValue>,
 }
 
-async fn get_values(State(state): State<Arc<AppState>>) -> (StatusCode, Json<Vec<KeyValue>>) {
+async fn get_values(
+    State(state): State<Arc<Mutex<AppState>>>,
+) -> (StatusCode, Json<Vec<KeyValue>>) {
+    let state = state.clone();
+    let state = state.lock().unwrap();
+
     (StatusCode::OK, Json(state.data.clone()))
 }
 
 async fn get_value(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<Mutex<AppState>>>,
     Path(key): Path<String>,
 ) -> (StatusCode, Json<KeyValue>) {
+    let state = state.clone();
+    let state = state.lock().unwrap();
+
     let result = state
         .data
         .clone()
@@ -130,4 +138,24 @@ async fn get_value(
         .expect("No value with specified key found");
 
     (StatusCode::OK, Json(result))
+}
+
+async fn update_value(
+    State(state): State<Arc<Mutex<AppState>>>,
+    Path(key): Path<String>,
+    Json(body): Json<KeyValue>,
+) -> (StatusCode, Json<KeyValue>) {
+    let state = state.clone();
+    let mut state = state.lock().unwrap();
+
+    let result = state
+        .data
+        .clone()
+        .into_iter()
+        .position(|x| x.key == key.as_str().into())
+        .expect("No value with specified key found");
+
+    state.data[result] = body.clone();
+
+    (StatusCode::OK, Json(body))
 }

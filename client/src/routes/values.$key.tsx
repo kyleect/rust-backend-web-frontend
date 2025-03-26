@@ -1,6 +1,12 @@
-import { Text, Title } from "@mantine/core";
+import { Button, ButtonGroup, Stack, Text, Title } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useMatch,
+  useParams,
+} from "@tanstack/react-router";
 import { KeyValue } from "server-types";
 
 export const Route = createFileRoute("/values/$key")({
@@ -23,6 +29,9 @@ function RouteComponent() {
     },
   });
 
+  const match = useMatch({ from: "/values/$key/edit", shouldThrow: false });
+  const isEditing = typeof match !== "undefined";
+
   if (value.isPending) {
     return <p>Loading...</p>;
   }
@@ -32,10 +41,29 @@ function RouteComponent() {
   }
 
   return (
-    <>
+    <Stack>
       <Title order={2}>{value.data.key}</Title>
 
-      <Text>{value.data.value}</Text>
-    </>
+      {isEditing || (
+        <>
+          <Text>{value.data.value}</Text>
+
+          <ButtonGroup>
+            <Button
+              component={Link}
+              to="/values/$key/edit"
+              params={{ key } as any}
+              style={{
+                color: "white",
+              }}
+            >
+              Edit
+            </Button>
+          </ButtonGroup>
+        </>
+      )}
+
+      <Outlet />
+    </Stack>
   );
 }

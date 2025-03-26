@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ValuesImport } from './routes/values'
 import { Route as IndexImport } from './routes/index'
 import { Route as ValuesKeyImport } from './routes/values.$key'
+import { Route as ValuesKeyEditImport } from './routes/values.$key.edit'
 
 // Create/Update Routes
 
@@ -33,6 +34,12 @@ const ValuesKeyRoute = ValuesKeyImport.update({
   id: '/$key',
   path: '/$key',
   getParentRoute: () => ValuesRoute,
+} as any)
+
+const ValuesKeyEditRoute = ValuesKeyEditImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => ValuesKeyRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -60,17 +67,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ValuesKeyImport
       parentRoute: typeof ValuesImport
     }
+    '/values/$key/edit': {
+      id: '/values/$key/edit'
+      path: '/edit'
+      fullPath: '/values/$key/edit'
+      preLoaderRoute: typeof ValuesKeyEditImport
+      parentRoute: typeof ValuesKeyImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface ValuesKeyRouteChildren {
+  ValuesKeyEditRoute: typeof ValuesKeyEditRoute
+}
+
+const ValuesKeyRouteChildren: ValuesKeyRouteChildren = {
+  ValuesKeyEditRoute: ValuesKeyEditRoute,
+}
+
+const ValuesKeyRouteWithChildren = ValuesKeyRoute._addFileChildren(
+  ValuesKeyRouteChildren,
+)
+
 interface ValuesRouteChildren {
-  ValuesKeyRoute: typeof ValuesKeyRoute
+  ValuesKeyRoute: typeof ValuesKeyRouteWithChildren
 }
 
 const ValuesRouteChildren: ValuesRouteChildren = {
-  ValuesKeyRoute: ValuesKeyRoute,
+  ValuesKeyRoute: ValuesKeyRouteWithChildren,
 }
 
 const ValuesRouteWithChildren =
@@ -79,28 +105,31 @@ const ValuesRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRoute
+  '/values/$key': typeof ValuesKeyRouteWithChildren
+  '/values/$key/edit': typeof ValuesKeyEditRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRoute
+  '/values/$key': typeof ValuesKeyRouteWithChildren
+  '/values/$key/edit': typeof ValuesKeyEditRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRoute
+  '/values/$key': typeof ValuesKeyRouteWithChildren
+  '/values/$key/edit': typeof ValuesKeyEditRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/values' | '/values/$key'
+  fullPaths: '/' | '/values' | '/values/$key' | '/values/$key/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/values' | '/values/$key'
-  id: '__root__' | '/' | '/values' | '/values/$key'
+  to: '/' | '/values' | '/values/$key' | '/values/$key/edit'
+  id: '__root__' | '/' | '/values' | '/values/$key' | '/values/$key/edit'
   fileRoutesById: FileRoutesById
 }
 
@@ -139,7 +168,14 @@ export const routeTree = rootRoute
     },
     "/values/$key": {
       "filePath": "values.$key.tsx",
-      "parent": "/values"
+      "parent": "/values",
+      "children": [
+        "/values/$key/edit"
+      ]
+    },
+    "/values/$key/edit": {
+      "filePath": "values.$key.edit.tsx",
+      "parent": "/values/$key"
     }
   }
 }

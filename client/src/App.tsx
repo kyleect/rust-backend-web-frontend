@@ -17,7 +17,7 @@ import { MantineProvider, TypographyStylesProvider } from "@mantine/core";
 const hashHistory = createHashHistory();
 
 // Create a new router instance
-const router = createRouter({
+export const router = createRouter({
   routeTree,
   history: hashHistory,
 });
