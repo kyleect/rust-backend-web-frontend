@@ -9,13 +9,15 @@ use ts_rs::TS;
 pub struct KeyValue {
     pub key: Key,
     pub value: Value,
+    pub is_secret: bool,
 }
 
 impl KeyValue {
-    pub fn new(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+    pub fn new(key: impl Into<Key>, value: impl Into<Value>, is_secret: bool) -> Self {
         KeyValue {
             key: key.into(),
             value: value.into(),
+            is_secret,
         }
     }
 }

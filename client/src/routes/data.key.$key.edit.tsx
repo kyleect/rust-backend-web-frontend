@@ -1,5 +1,12 @@
 import { router } from "@/App";
-import { Button, ButtonGroup, Stack, TextInput, Title } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  Stack,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -55,6 +62,17 @@ function RouteComponent() {
 
   if (value.isPending) {
     return <p>Loading...</p>;
+  }
+
+  if (value.data?.is_secret) {
+    return (
+      <Stack>
+        <Title order={3}>Editing</Title>
+        <Alert title="Secrets can't be edited!" variant="outline" color="red">
+          Please delete and re-add secret with the desired value.
+        </Alert>
+      </Stack>
+    );
   }
 
   return (

@@ -60,7 +60,7 @@ function RouteComponent() {
                   scrollIntoView();
                 }}
               >
-                {value.key}
+                {value.key} {value.is_secret && "🔒"}
               </Link>
             </Table.Td>
           </Table.Tr>

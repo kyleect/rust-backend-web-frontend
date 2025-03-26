@@ -1,4 +1,4 @@
-import { Button, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Stack, Switch, TextInput, Title } from "@mantine/core";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -12,15 +12,17 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const [isSecret, setIsSecret] = useState(false);
   const nav = useNavigate({ from: "/data/new" });
 
   const createKeyValue = useMutation({
-    mutationFn: async (keyValue: { key: string; value: string }) => {
-      const { key, value } = keyValue;
+    mutationFn: async (keyValue: KeyValue) => {
+      const { key, value, is_secret } = keyValue;
 
       const body: KeyValue = {
         key,
         value,
+        is_secret,
       };
 
       await fetch(`/api/data`, {
@@ -44,7 +46,7 @@ function RouteComponent() {
           e.preventDefault();
 
           createKeyValue.mutate(
-            { key, value },
+            { key, value, is_secret: isSecret },
             {
               onSuccess: () => {
                 nav({ to: "/data/key/$key", params: { key } });
@@ -55,6 +57,12 @@ function RouteComponent() {
         }}
       >
         <Stack>
+          <Switch
+            label="This is a secret"
+            checked={isSecret}
+            onChange={(event) => setIsSecret(event.target.checked)}
+          />
+
           <TextInput
             label="Key"
             value={key}

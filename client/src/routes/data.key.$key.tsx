@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Table } from "@mantine/core";
+import { Badge, Button, Group, Stack, Table } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -7,6 +7,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
+import { useState } from "react";
 import { KeyValue } from "server-types";
 
 export const Route = createFileRoute("/data/key/$key")({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/data/key/$key")({
 
 function RouteComponent() {
   const queryClient = useQueryClient();
+  const [showSecret, setShowSecret] = useState(false);
 
   const key = useParams({
     from: "/data/key/$key",
@@ -62,26 +64,47 @@ function RouteComponent() {
           </Table.Tr>
 
           <Table.Tr>
-            <Table.Th>Value</Table.Th>
-            <Table.Td>{value.data.value}</Table.Td>
+            <Table.Th>Value {value.data.is_secret && "🔒"}</Table.Th>
+            {value.data.is_secret ? (
+              <Table.Td>
+                {showSecret ? (
+                  <Group>
+                    <span>{value.data.value}</span>
+                    <Button
+                      variant="outline"
+                      size="compact-xs"
+                      onClick={() => {
+                        setShowSecret(false);
+                      }}
+                    >
+                      Hide
+                    </Button>
+                  </Group>
+                ) : (
+                  <Group>
+                    <Badge color="gray">Secret Value</Badge>
+                    <Button
+                      variant="outline"
+                      size="compact-xs"
+                      onClick={() => {
+                        setShowSecret(true);
+                      }}
+                    >
+                      Reveal
+                    </Button>
+                  </Group>
+                )}
+              </Table.Td>
+            ) : (
+              <Table.Td>{value.data.value}</Table.Td>
+            )}
           </Table.Tr>
         </Table.Tbody>
       </Table>
 
       <Group>
-        <Link
-          to="/data/key/$key/edit"
-          params={{ key }}
-          activeProps={{
-            style: {
-              display: "none",
-            },
-          }}
-        >
-          Edit
-        </Link>
-
         <Button
+          color="red"
           onClick={() => {
             deleteKeyValue.mutate(key, {
               onSuccess: () => {
@@ -92,6 +115,20 @@ function RouteComponent() {
         >
           Delete
         </Button>
+
+        {value.data.is_secret || (
+          <Link
+            to="/data/key/$key/edit"
+            params={{ key }}
+            activeProps={{
+              style: {
+                display: "none",
+              },
+            }}
+          >
+            Edit
+          </Link>
+        )}
       </Group>
 
       <Outlet />
