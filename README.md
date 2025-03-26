@@ -24,8 +24,8 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md) for instructions on how to set up the pro
 - Produces a tiny single binary
 - Backend for frontend provides encapsulation. There is no server side rendering
 - No CORS headers required
-- Shared types between backend and frontend
-- Development mode (hot-reloading client, recompiling server)
+- Shared types between backend and frontend (Rust -> Typescript type generation)
+- Development mode (hot-reloading client, recompiling server & types)
 
 ## Todo
 
