@@ -91,8 +91,8 @@ async fn main() -> Result<(), Error> {
         CompressionLayer::new().br(true).deflate(true).gzip(true);
 
     let app = Router::new()
-        .route("/api/values", get(get_values))
-        .route("/api/values/{key}", get(get_value).put(update_value))
+        .route("/api/data", get(get_values))
+        .route("/api/data/{key}", get(get_value).put(update_value))
         .fallback_service(static_dir.clone())
         .with_state(state)
         .layer(compression_layer);

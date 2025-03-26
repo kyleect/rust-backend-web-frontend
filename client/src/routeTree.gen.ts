@@ -11,16 +11,16 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ValuesImport } from './routes/values'
+import { Route as DataImport } from './routes/data'
 import { Route as IndexImport } from './routes/index'
-import { Route as ValuesKeyImport } from './routes/values.$key'
-import { Route as ValuesKeyEditImport } from './routes/values.$key.edit'
+import { Route as DataKeyImport } from './routes/data.$key'
+import { Route as DataKeyEditImport } from './routes/data.$key.edit'
 
 // Create/Update Routes
 
-const ValuesRoute = ValuesImport.update({
-  id: '/values',
-  path: '/values',
+const DataRoute = DataImport.update({
+  id: '/data',
+  path: '/data',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -30,16 +30,16 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ValuesKeyRoute = ValuesKeyImport.update({
+const DataKeyRoute = DataKeyImport.update({
   id: '/$key',
   path: '/$key',
-  getParentRoute: () => ValuesRoute,
+  getParentRoute: () => DataRoute,
 } as any)
 
-const ValuesKeyEditRoute = ValuesKeyEditImport.update({
+const DataKeyEditRoute = DataKeyEditImport.update({
   id: '/edit',
   path: '/edit',
-  getParentRoute: () => ValuesKeyRoute,
+  getParentRoute: () => DataKeyRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -53,94 +53,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/values': {
-      id: '/values'
-      path: '/values'
-      fullPath: '/values'
-      preLoaderRoute: typeof ValuesImport
+    '/data': {
+      id: '/data'
+      path: '/data'
+      fullPath: '/data'
+      preLoaderRoute: typeof DataImport
       parentRoute: typeof rootRoute
     }
-    '/values/$key': {
-      id: '/values/$key'
+    '/data/$key': {
+      id: '/data/$key'
       path: '/$key'
-      fullPath: '/values/$key'
-      preLoaderRoute: typeof ValuesKeyImport
-      parentRoute: typeof ValuesImport
+      fullPath: '/data/$key'
+      preLoaderRoute: typeof DataKeyImport
+      parentRoute: typeof DataImport
     }
-    '/values/$key/edit': {
-      id: '/values/$key/edit'
+    '/data/$key/edit': {
+      id: '/data/$key/edit'
       path: '/edit'
-      fullPath: '/values/$key/edit'
-      preLoaderRoute: typeof ValuesKeyEditImport
-      parentRoute: typeof ValuesKeyImport
+      fullPath: '/data/$key/edit'
+      preLoaderRoute: typeof DataKeyEditImport
+      parentRoute: typeof DataKeyImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface ValuesKeyRouteChildren {
-  ValuesKeyEditRoute: typeof ValuesKeyEditRoute
+interface DataKeyRouteChildren {
+  DataKeyEditRoute: typeof DataKeyEditRoute
 }
 
-const ValuesKeyRouteChildren: ValuesKeyRouteChildren = {
-  ValuesKeyEditRoute: ValuesKeyEditRoute,
+const DataKeyRouteChildren: DataKeyRouteChildren = {
+  DataKeyEditRoute: DataKeyEditRoute,
 }
 
-const ValuesKeyRouteWithChildren = ValuesKeyRoute._addFileChildren(
-  ValuesKeyRouteChildren,
-)
+const DataKeyRouteWithChildren =
+  DataKeyRoute._addFileChildren(DataKeyRouteChildren)
 
-interface ValuesRouteChildren {
-  ValuesKeyRoute: typeof ValuesKeyRouteWithChildren
+interface DataRouteChildren {
+  DataKeyRoute: typeof DataKeyRouteWithChildren
 }
 
-const ValuesRouteChildren: ValuesRouteChildren = {
-  ValuesKeyRoute: ValuesKeyRouteWithChildren,
+const DataRouteChildren: DataRouteChildren = {
+  DataKeyRoute: DataKeyRouteWithChildren,
 }
 
-const ValuesRouteWithChildren =
-  ValuesRoute._addFileChildren(ValuesRouteChildren)
+const DataRouteWithChildren = DataRoute._addFileChildren(DataRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRouteWithChildren
-  '/values/$key/edit': typeof ValuesKeyEditRoute
+  '/data': typeof DataRouteWithChildren
+  '/data/$key': typeof DataKeyRouteWithChildren
+  '/data/$key/edit': typeof DataKeyEditRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRouteWithChildren
-  '/values/$key/edit': typeof ValuesKeyEditRoute
+  '/data': typeof DataRouteWithChildren
+  '/data/$key': typeof DataKeyRouteWithChildren
+  '/data/$key/edit': typeof DataKeyEditRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/values': typeof ValuesRouteWithChildren
-  '/values/$key': typeof ValuesKeyRouteWithChildren
-  '/values/$key/edit': typeof ValuesKeyEditRoute
+  '/data': typeof DataRouteWithChildren
+  '/data/$key': typeof DataKeyRouteWithChildren
+  '/data/$key/edit': typeof DataKeyEditRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/values' | '/values/$key' | '/values/$key/edit'
+  fullPaths: '/' | '/data' | '/data/$key' | '/data/$key/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/values' | '/values/$key' | '/values/$key/edit'
-  id: '__root__' | '/' | '/values' | '/values/$key' | '/values/$key/edit'
+  to: '/' | '/data' | '/data/$key' | '/data/$key/edit'
+  id: '__root__' | '/' | '/data' | '/data/$key' | '/data/$key/edit'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ValuesRoute: typeof ValuesRouteWithChildren
+  DataRoute: typeof DataRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ValuesRoute: ValuesRouteWithChildren,
+  DataRoute: DataRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -154,28 +152,28 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/values"
+        "/data"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/values": {
-      "filePath": "values.tsx",
+    "/data": {
+      "filePath": "data.tsx",
       "children": [
-        "/values/$key"
+        "/data/$key"
       ]
     },
-    "/values/$key": {
-      "filePath": "values.$key.tsx",
-      "parent": "/values",
+    "/data/$key": {
+      "filePath": "data.$key.tsx",
+      "parent": "/data",
       "children": [
-        "/values/$key/edit"
+        "/data/$key/edit"
       ]
     },
-    "/values/$key/edit": {
-      "filePath": "values.$key.edit.tsx",
-      "parent": "/values/$key"
+    "/data/$key/edit": {
+      "filePath": "data.$key.edit.tsx",
+      "parent": "/data/$key"
     }
   }
 }

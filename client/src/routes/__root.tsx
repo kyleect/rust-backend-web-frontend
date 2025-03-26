@@ -24,9 +24,9 @@ export const Route = createRootRoute({
           />
 
           <NavLink
-            label="Values"
+            label="Data"
             component={Link}
-            to="/values"
+            to="/data"
             activeProps={{
               style: { fontWeight: "bold" },
             }}

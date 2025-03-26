@@ -9,27 +9,27 @@ import {
 } from "@tanstack/react-router";
 import { KeyValue } from "server-types";
 
-export const Route = createFileRoute("/values/$key")({
+export const Route = createFileRoute("/data/$key")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const key = useParams({
-    from: "/values/$key",
+    from: "/data/$key",
     select: ({ key }) => key,
   });
 
   const value = useQuery({
-    queryKey: ["value", key],
+    queryKey: ["data", key],
     queryFn: async () => {
-      const response = await fetch(`/api/values/${key}`);
+      const response = await fetch(`/api/data/${key}`);
       const data = (await response.json()) as KeyValue;
 
       return data;
     },
   });
 
-  const match = useMatch({ from: "/values/$key/edit", shouldThrow: false });
+  const match = useMatch({ from: "/data/$key/edit", shouldThrow: false });
   const isEditing = typeof match !== "undefined";
 
   if (value.isPending) {
@@ -51,7 +51,7 @@ function RouteComponent() {
           <ButtonGroup>
             <Button
               component={Link}
-              to="/values/$key/edit"
+              to="/data/$key/edit"
               params={{ key } as any}
               style={{
                 color: "white",

@@ -9,12 +9,12 @@ import {
 } from "@tanstack/react-router";
 import { KeyValue } from "server-types";
 
-export const Route = createFileRoute("/values")({
+export const Route = createFileRoute("/data")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const match = useMatch({ from: "/values/$key", shouldThrow: false });
+  const match = useMatch({ from: "/data/$key", shouldThrow: false });
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     duration: 250,
   });
@@ -22,9 +22,9 @@ function RouteComponent() {
   const subViewIsRendering = typeof match !== "undefined";
 
   const values = useQuery({
-    queryKey: ["values"],
+    queryKey: ["data"],
     queryFn: async () => {
-      const response = await fetch("/api/values");
+      const response = await fetch("/api/data");
       const data = (await response.json()) as KeyValue[];
 
       return data;
@@ -46,7 +46,7 @@ function RouteComponent() {
           <Table.Tr key={value.key}>
             <Table.Td>
               <Link
-                to="/values/$key"
+                to="/data/$key"
                 params={{ key: value.key }}
                 activeProps={{
                   style: {
@@ -68,7 +68,7 @@ function RouteComponent() {
 
   return (
     <>
-      <Title order={2}>Values</Title>
+      <Title order={2}>Keys</Title>
       <ScrollArea.Autosize>
         {subViewIsRendering ? (
           <Grid>

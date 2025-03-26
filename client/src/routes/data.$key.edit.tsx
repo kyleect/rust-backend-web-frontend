@@ -9,24 +9,24 @@ import {
 import { useState } from "react";
 import { KeyValue } from "server-types";
 
-export const Route = createFileRoute("/values/$key/edit")({
+export const Route = createFileRoute("/data/$key/edit")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const queryClient = useQueryClient();
   const [updatedValue, setUpdatedValue] = useState("");
-  const nav = useNavigate({ from: "/values/$key/edit" });
+  const nav = useNavigate({ from: "/data/$key/edit" });
 
   const key = useParams({
-    from: "/values/$key",
+    from: "/data/$key",
     select: ({ key }) => key,
   });
 
   const value = useQuery({
-    queryKey: ["value", key],
+    queryKey: ["data", key],
     queryFn: async () => {
-      const response = await fetch(`/api/values/${key}`);
+      const response = await fetch(`/api/data/${key}`);
       const data = (await response.json()) as KeyValue;
 
       setUpdatedValue(data.value);
@@ -42,7 +42,7 @@ function RouteComponent() {
         value,
       };
 
-      await fetch(`api/values/${key}`, {
+      await fetch(`api/data/${key}`, {
         method: "PUT",
         body: JSON.stringify(body),
         headers: {
@@ -50,7 +50,7 @@ function RouteComponent() {
         },
       });
 
-      queryClient.invalidateQueries({ queryKey: ["value", key] });
+      queryClient.invalidateQueries({ queryKey: ["data", key] });
     },
   });
 
@@ -71,7 +71,7 @@ function RouteComponent() {
           onClick={() => {
             updateKeyValue.mutate(updatedValue, {
               onSuccess: () => {
-                nav({ to: "/values/$key", params: { key } });
+                nav({ to: "/data/$key", params: { key } });
               },
             });
           }}
