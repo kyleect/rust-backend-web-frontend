@@ -51,6 +51,11 @@ watch-client:
 watch-server:
     cd server && just watch
 
+# Watch the types for changes and rebuild
+[private]
+watch-types:
+    cd types && just watch
+
 [unix]
 install: build
     cp target/debug/server ~/.cargo/bin/{{app-name}}
@@ -70,6 +75,7 @@ install-release: build-release
 # Start the server and client in development mode
 watch:
   #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
+  just watch-types
   just watch-client
   just watch-server
 

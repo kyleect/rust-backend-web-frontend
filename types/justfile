@@ -19,6 +19,16 @@ build-release:
     cargo run --bin bundle_types --features bundle_types --release
     npm run build
 
+# Build the code
+[private]
+build-for-watch: clean
+    cargo test export_bindings
+    cargo run --bin bundle_types --features bundle_types
+    npm run build
+
+watch:
+    watchexec -r just build-for-watch
+
 # Check linters against code
 lint:
     echo 'No linter found'
