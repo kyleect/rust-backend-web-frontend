@@ -3,21 +3,15 @@ default:
 
 # Delete build artifacts
 clean:
-    rm -rf dist
+    echo 'No cleaning defined'
 
 # Build the code
 build: clean
     npm run build
-    just copy-client-assets-to-server-static
 
 # Build the code for release
 build-release: clean
     npm run build-release
-    just copy-client-assets-to-server-static
-
-# Copy client build artifacts to server's static directory
-copy-client-assets-to-server-static:
-    cp -a ./dist/. ../server/static
 
 # Build and watch for changes
 watch:

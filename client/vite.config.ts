@@ -9,8 +9,11 @@ export default defineConfig(({ mode }) => ({
     TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     react(),
   ],
+
   build: {
     sourcemap: mode === "development",
+    outDir: "../server/static",
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: {
