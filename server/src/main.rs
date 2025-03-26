@@ -91,7 +91,7 @@ async fn main() -> Result<(), Error> {
         CompressionLayer::new().br(true).deflate(true).gzip(true);
 
     let app = Router::new()
-        .route("/api/data", get(get_values))
+        .route("/api/data", get(get_values).post(create_key_value))
         .route("/api/data/{key}", get(get_value).put(update_value))
         .fallback_service(static_dir.clone())
         .with_state(state)
@@ -112,6 +112,18 @@ struct Args {
 #[derive(Clone)]
 struct AppState {
     data: Vec<KeyValue>,
+}
+
+async fn create_key_value(
+    State(state): State<Arc<Mutex<AppState>>>,
+    Json(body): Json<KeyValue>,
+) -> (StatusCode, Json<KeyValue>) {
+    let state = state.clone();
+    let mut state = state.lock().unwrap();
+
+    state.data.push(body.clone());
+
+    (StatusCode::CREATED, Json(body))
 }
 
 async fn get_values(

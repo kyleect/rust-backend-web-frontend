@@ -14,12 +14,15 @@ export const Route = createFileRoute("/data")({
 });
 
 function RouteComponent() {
-  const match = useMatch({ from: "/data/key/$key", shouldThrow: false });
+  const viewKeyValueMatch = useMatch({
+    from: "/data/key/$key",
+    shouldThrow: false,
+  });
+  const isViewingDataKey = typeof viewKeyValueMatch !== "undefined";
+
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     duration: 250,
   });
-
-  const subViewIsRendering = typeof match !== "undefined";
 
   const values = useQuery({
     queryKey: ["data"],
@@ -72,7 +75,9 @@ function RouteComponent() {
         Keys
       </Title>
 
-      {subViewIsRendering ? (
+      <Link to="/data/new">Add</Link>
+
+      {isViewingDataKey ? (
         <Grid>
           <Grid.Col span={{ base: 2 }}>{table}</Grid.Col>
 
