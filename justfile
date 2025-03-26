@@ -105,16 +105,19 @@ format-check:
 
 # Run all non-test checks against code
 check:
+    cd types && just build
     cd server && just check
     cd client && just check
 
 # Run all checks, tests, and build the code
 verify:
+    cd types && just build
     cd server && just verify
     cd client && just verify
 
 # Run all tests
 test:
+    cd types && just build
     cd server && just test
     cd client && just test
 

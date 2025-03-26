@@ -8,7 +8,7 @@ clean:
 
 # Build the code
 build:
-    cargo build
+    cargo build -F development_mode
 
 # Build the code for release
 build-release:
@@ -39,7 +39,7 @@ format-check:
 
 # Run all non-test checks against code
 check:
-    cargo check --workspace --all-targets
+    cargo check --workspace --all-targets -F development_mode
     just format-check
     just lint
 
@@ -49,7 +49,7 @@ verify:
 
 # Run all tests
 test:
-    cargo test --workspace --all-targets --all-features
+    cargo test --workspace --all-targets --all-features -F development_mode
 
 # Alias for the diesel command
 db *args='help':
