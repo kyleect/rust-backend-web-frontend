@@ -7,7 +7,7 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import { useState } from "react";
-import { KeyValue } from "server-types";
+import { KeyValue, UpdateKeyValue } from "server-types";
 
 export const Route = createFileRoute("/data/key/$key/edit")({
   component: RouteComponent,
@@ -37,8 +37,7 @@ function RouteComponent() {
 
   const updateKeyValue = useMutation({
     mutationFn: async (value: string) => {
-      const body: KeyValue = {
-        key,
+      const body: UpdateKeyValue = {
         value,
       };
 

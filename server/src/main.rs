@@ -16,7 +16,7 @@ use tower_http::compression::CompressionLayer;
 use tower_http::services::ServeDir;
 #[cfg(not(feature = "development_mode"))]
 use tower_serve_static::ServeDir as StaticServeDir;
-use types::KeyValue;
+use types::{KeyValue, UpdateKeyValue};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -160,7 +160,7 @@ async fn get_value(
 async fn update_value(
     State(state): State<Arc<Mutex<AppState>>>,
     Path(key): Path<String>,
-    Json(body): Json<KeyValue>,
+    Json(body): Json<UpdateKeyValue>,
 ) -> Result<(StatusCode, Json<KeyValue>), (StatusCode, String)> {
     let state = state.clone();
     let mut state = state.lock().unwrap();
@@ -173,9 +173,9 @@ async fn update_value(
 
     match result {
         Some(result) => {
-            state.data[result] = body.clone();
+            state.data[result].value = body.clone().value;
 
-            Ok((StatusCode::OK, Json(body)))
+            Ok((StatusCode::OK, Json(state.data[result].clone())))
         }
         None => Err((StatusCode::NOT_FOUND, "Value not found".into())),
     }

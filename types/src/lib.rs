@@ -3,7 +3,7 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-/// A key value pair
+/// A key value
 #[derive(TS, Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[ts(export)]
 pub struct KeyValue {
@@ -15,6 +15,21 @@ impl KeyValue {
     pub fn new(key: impl Into<Key>, value: impl Into<Value>) -> Self {
         KeyValue {
             key: key.into(),
+            value: value.into(),
+        }
+    }
+}
+
+/// Update the value of a key value
+#[derive(TS, Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[ts(export)]
+pub struct UpdateKeyValue {
+    pub value: Value,
+}
+
+impl UpdateKeyValue {
+    pub fn new(value: impl Into<Value>) -> Self {
+        Self {
             value: value.into(),
         }
     }
