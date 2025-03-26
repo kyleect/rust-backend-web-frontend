@@ -14,7 +14,7 @@ export const Route = createFileRoute("/data")({
 });
 
 function RouteComponent() {
-  const match = useMatch({ from: "/data/$key", shouldThrow: false });
+  const match = useMatch({ from: "/data/key/$key", shouldThrow: false });
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
     duration: 250,
   });
@@ -46,7 +46,7 @@ function RouteComponent() {
           <Table.Tr key={value.key}>
             <Table.Td>
               <Link
-                to="/data/$key"
+                to="/data/key/$key"
                 params={{ key: value.key }}
                 activeProps={{
                   style: {

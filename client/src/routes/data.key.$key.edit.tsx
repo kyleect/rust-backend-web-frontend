@@ -1,5 +1,5 @@
 import { router } from "@/App";
-import { Button, ButtonGroup, Stack, TextInput } from "@mantine/core";
+import { Button, ButtonGroup, Stack, TextInput, Title } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -9,17 +9,17 @@ import {
 import { useState } from "react";
 import { KeyValue } from "server-types";
 
-export const Route = createFileRoute("/data/$key/edit")({
+export const Route = createFileRoute("/data/key/$key/edit")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const queryClient = useQueryClient();
   const [updatedValue, setUpdatedValue] = useState("");
-  const nav = useNavigate({ from: "/data/$key/edit" });
+  const nav = useNavigate({ from: "/data/key/$key/edit" });
 
   const key = useParams({
-    from: "/data/$key",
+    from: "/data/key/$key",
     select: ({ key }) => key,
   });
 
@@ -60,8 +60,10 @@ function RouteComponent() {
 
   return (
     <Stack>
+      <Title order={3}>Editing</Title>
+
       <TextInput
-        label="Value"
+        label="Updated Value"
         value={updatedValue}
         onChange={(e) => setUpdatedValue(e.target.value)}
         autoFocus
@@ -71,7 +73,7 @@ function RouteComponent() {
           onClick={() => {
             updateKeyValue.mutate(updatedValue, {
               onSuccess: () => {
-                nav({ to: "/data/$key", params: { key } });
+                nav({ to: "/data/key/$key", params: { key } });
               },
             });
           }}
