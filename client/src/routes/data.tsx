@@ -1,4 +1,4 @@
-import { Grid, ScrollArea, Table, Title } from "@mantine/core";
+import { Grid, Table, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -69,21 +69,19 @@ function RouteComponent() {
   return (
     <>
       <Title order={2}>Keys</Title>
-      <ScrollArea.Autosize>
-        {subViewIsRendering ? (
-          <Grid>
-            <Grid.Col span={{ base: 2 }}>{table}</Grid.Col>
+      {subViewIsRendering ? (
+        <Grid>
+          <Grid.Col span={{ base: 2 }}>{table}</Grid.Col>
 
-            <Grid.Col span={{ base: 10 }}>
-              <div ref={targetRef}>
-                <Outlet />
-              </div>
-            </Grid.Col>
-          </Grid>
-        ) : (
-          table
-        )}
-      </ScrollArea.Autosize>
+          <Grid.Col span={{ base: 10 }}>
+            <div ref={targetRef}>
+              <Outlet />
+            </div>
+          </Grid.Col>
+        </Grid>
+      ) : (
+        table
+      )}
     </>
   );
 }
