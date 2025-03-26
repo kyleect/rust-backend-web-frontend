@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Stack, Text, Title } from "@mantine/core";
+import { Button, ButtonGroup, Stack, Table } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -42,12 +42,22 @@ function RouteComponent() {
 
   return (
     <Stack>
-      <Title order={2}>{value.data.key}</Title>
+      <Table variant="vertical" layout="fixed">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Th w={100}>Key</Table.Th>
+            <Table.Td>{value.data.key}</Table.Td>
+          </Table.Tr>
+
+          <Table.Tr>
+            <Table.Th>Value</Table.Th>
+            <Table.Td>{value.data.value}</Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
+      </Table>
 
       {isEditing || (
         <>
-          <Text>{value.data.value}</Text>
-
           <ButtonGroup>
             <Button
               component={Link}
