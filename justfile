@@ -46,6 +46,11 @@ build-client-release:
 watch-client:
     cd client && just watch
 
+# Watch the server for changes and rebuild
+[private]
+watch-server:
+    cd server && just watch
+
 [unix]
 install: build
     cp target/debug/server ~/.cargo/bin/{{app-name}}
@@ -63,10 +68,10 @@ install-release: build-release
     cp target/release/server.exe ~/.cargo/bin/{{app-name}}.exe
 
 # Start the server and client in development mode
-watch port='3000':
+watch:
   #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
   just watch-client
-  just run-server-dev 3001
+  just watch-server
 
 [private]
 run-server-dev port:

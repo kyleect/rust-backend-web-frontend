@@ -25,9 +25,8 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md) for instructions on how to set up the pro
 - Backend for frontend provides encapsulation. There is no server side rendering
 - No CORS headers required
 - Shared types between backend and frontend
-- Development mode
+- Development mode (hot-reloading client, recompiling server)
 
 ## Todo
 
-- [ ] Add hot reloading to development mode
 - [ ] SQLite support (controlled with Cargo feature)
