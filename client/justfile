@@ -5,7 +5,7 @@ default:
 clean:
     echo 'No cleaning defined'
 
-# Build the code
+# Build the code for development
 build: clean
     npm run build
 
@@ -15,7 +15,9 @@ build-release: clean
 
 # Build and watch for changes
 watch:
-    echo 'Do not use this command. Run `just watch` from root instead'
+  #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
+  npm run watch-routes
+  npx vite
 
 # Check linters against code
 lint:

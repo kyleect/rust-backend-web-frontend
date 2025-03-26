@@ -9,7 +9,17 @@ export default defineConfig(({ mode }) => ({
     TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     react(),
   ],
-
+  server: {
+    open: "/",
+    port: 3000,
+    proxy: {
+      "/api": {
+        target: "http://0.0.0.0:3001",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
+    },
+  },
   build: {
     sourcemap: mode === "development",
     outDir: "../server/static",

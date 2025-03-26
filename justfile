@@ -41,6 +41,11 @@ build-server-release:
 build-client-release:
     cd client && just build-release
 
+# Watch the client for changes and rebuild
+[private]
+watch-client:
+    cd client && just watch
+
 [unix]
 install: build
     cp target/debug/server ~/.cargo/bin/{{app-name}}
@@ -60,12 +65,12 @@ install-release: build-release
 # Start the server and client in development mode
 watch port='3000':
   #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
-  watchexec -w client just build-client
-  just run-server-dev {{port}}
+  just watch-client
+  just run-server-dev 3001
 
 [private]
 run-server-dev port:
-    cargo run -F development_mode --bin server -- --port {{port}}
+    cargo run -F development_mode --bin server -- --port {{port}} --open false
 
 # Check linters against code
 lint:

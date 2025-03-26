@@ -83,7 +83,7 @@ async fn main() -> Result<(), Error> {
 
     eprintln!("App is running: {url}");
 
-    if webbrowser::Browser::is_available() {
+    if args.open.unwrap_or(true) && webbrowser::Browser::is_available() {
         webbrowser::open(&url)?;
     }
 
@@ -110,6 +110,9 @@ struct Args {
     /// Set which port to use (default: random)
     #[arg(long)]
     port: Option<u16>,
+    /// Open the URL in a browser after starting the server (default: true)
+    #[arg(long)]
+    open: Option<bool>,
 }
 
 #[derive(Clone)]
