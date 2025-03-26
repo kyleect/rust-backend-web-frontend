@@ -1,4 +1,4 @@
-import { Button, Stack, Table } from "@mantine/core";
+import { Button, Group, Stack, Table } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -68,29 +68,31 @@ function RouteComponent() {
         </Table.Tbody>
       </Table>
 
-      <Link
-        to="/data/key/$key/edit"
-        params={{ key }}
-        activeProps={{
-          style: {
-            display: "none",
-          },
-        }}
-      >
-        Edit
-      </Link>
-
-      <Button
-        onClick={() => {
-          deleteKeyValue.mutate(key, {
-            onSuccess: () => {
-              nav({ to: "/data" });
+      <Group>
+        <Link
+          to="/data/key/$key/edit"
+          params={{ key }}
+          activeProps={{
+            style: {
+              display: "none",
             },
-          });
-        }}
-      >
-        Delete
-      </Button>
+          }}
+        >
+          Edit
+        </Link>
+
+        <Button
+          onClick={() => {
+            deleteKeyValue.mutate(key, {
+              onSuccess: () => {
+                nav({ to: "/data" });
+              },
+            });
+          }}
+        >
+          Delete
+        </Button>
+      </Group>
 
       <Outlet />
     </Stack>
