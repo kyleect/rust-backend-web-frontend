@@ -92,7 +92,10 @@ async fn main() -> Result<(), Error> {
 
     let app = Router::new()
         .route("/api/data", get(get_values).post(create_key_value))
-        .route("/api/data/{key}", get(get_value).put(update_value))
+        .route(
+            "/api/data/{key}",
+            get(get_value).put(update_value).delete(delete_value),
+        )
         .fallback_service(static_dir.clone())
         .with_state(state)
         .layer(compression_layer);
@@ -138,7 +141,7 @@ async fn get_values(
 async fn get_value(
     State(state): State<Arc<Mutex<AppState>>>,
     Path(key): Path<String>,
-) -> (StatusCode, Json<KeyValue>) {
+) -> Result<(StatusCode, Json<KeyValue>), (StatusCode, String)> {
     let state = state.clone();
     let state = state.lock().unwrap();
 
@@ -146,17 +149,19 @@ async fn get_value(
         .data
         .clone()
         .into_iter()
-        .find(|x| x.key == key.as_str().into())
-        .expect("No value with specified key found");
+        .find(|x| x.key == key.as_str().into());
 
-    (StatusCode::OK, Json(result))
+    match result {
+        Some(result) => Ok((StatusCode::OK, Json(result))),
+        None => Err((StatusCode::NOT_FOUND, "Value not found".into())),
+    }
 }
 
 async fn update_value(
     State(state): State<Arc<Mutex<AppState>>>,
     Path(key): Path<String>,
     Json(body): Json<KeyValue>,
-) -> (StatusCode, Json<KeyValue>) {
+) -> Result<(StatusCode, Json<KeyValue>), (StatusCode, String)> {
     let state = state.clone();
     let mut state = state.lock().unwrap();
 
@@ -164,10 +169,36 @@ async fn update_value(
         .data
         .clone()
         .into_iter()
-        .position(|x| x.key == key.as_str().into())
-        .expect("No value with specified key found");
+        .position(|x| x.key == key.as_str().into());
 
-    state.data[result] = body.clone();
+    match result {
+        Some(result) => {
+            state.data[result] = body.clone();
 
-    (StatusCode::OK, Json(body))
+            Ok((StatusCode::OK, Json(body)))
+        }
+        None => Err((StatusCode::NOT_FOUND, "Value not found".into())),
+    }
+}
+
+async fn delete_value(
+    State(state): State<Arc<Mutex<AppState>>>,
+    Path(key): Path<String>,
+) -> (StatusCode, ()) {
+    let state = state.clone();
+    let mut state = state.lock().unwrap();
+
+    let result = state
+        .data
+        .clone()
+        .into_iter()
+        .position(|x| x.key == key.as_str().into());
+
+    match result {
+        Some(result) => {
+            state.data.remove(result);
+            (StatusCode::NO_CONTENT, ())
+        }
+        None => (StatusCode::NOT_FOUND, ()),
+    }
 }

@@ -1,9 +1,10 @@
-import { Stack, Table } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
+import { Button, Stack, Table } from "@mantine/core";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
   Link,
   Outlet,
+  useNavigate,
   useParams,
 } from "@tanstack/react-router";
 import { KeyValue } from "server-types";
@@ -13,10 +14,14 @@ export const Route = createFileRoute("/data/key/$key")({
 });
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+
   const key = useParams({
     from: "/data/key/$key",
     select: ({ key }) => key,
   });
+
+  const nav = useNavigate({ from: "/data/key/$key" });
 
   const value = useQuery({
     queryKey: ["data", key],
@@ -25,6 +30,17 @@ function RouteComponent() {
       const data = (await response.json()) as KeyValue;
 
       return data;
+    },
+  });
+
+  const deleteKeyValue = useMutation({
+    mutationFn: async (key: string) => {
+      await fetch(`api/data/${key}`, {
+        method: "DELETE",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["data"] });
+      queryClient.invalidateQueries({ queryKey: ["data", key] });
     },
   });
 
@@ -63,6 +79,18 @@ function RouteComponent() {
       >
         Edit
       </Link>
+
+      <Button
+        onClick={() => {
+          deleteKeyValue.mutate(key, {
+            onSuccess: () => {
+              nav({ to: "/data" });
+            },
+          });
+        }}
+      >
+        Delete
+      </Button>
 
       <Outlet />
     </Stack>
