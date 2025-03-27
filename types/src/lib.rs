@@ -13,11 +13,21 @@ pub struct KeyValue {
 }
 
 impl KeyValue {
-    pub fn new(key: impl Into<Key>, value: impl Into<Value>, is_secret: bool) -> Self {
-        KeyValue {
+    /// Create a new key value
+    pub fn new(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+        Self {
             key: key.into(),
             value: value.into(),
-            is_secret,
+            is_secret: false,
+        }
+    }
+
+    /// Create a new key value desecret
+    pub fn new_secret(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+        Self {
+            key: key.into(),
+            value: value.into(),
+            is_secret: true,
         }
     }
 }
