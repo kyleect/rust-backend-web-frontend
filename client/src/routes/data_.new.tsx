@@ -57,12 +57,6 @@ function RouteComponent() {
         }}
       >
         <Stack>
-          <Switch
-            label="This is a secret"
-            checked={isSecret}
-            onChange={(event) => setIsSecret(event.target.checked)}
-          />
-
           <TextInput
             label="Key"
             value={key}
@@ -74,6 +68,12 @@ function RouteComponent() {
             label="Value"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+          />
+
+          <Switch
+            label="This is a secret"
+            checked={isSecret}
+            onChange={(event) => setIsSecret(event.target.checked)}
           />
 
           <Button type="submit">Save</Button>
