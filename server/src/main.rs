@@ -2,7 +2,7 @@ use std::sync::{Arc, Mutex};
 
 use axum::{
     Json, Router,
-    extract::{Path, State},
+    extract::{MatchedPath, Path, Request, State},
     http::StatusCode,
     routing::get,
 };
@@ -11,15 +11,32 @@ use clap::Parser;
 #[cfg(not(feature = "development_mode"))]
 use include_dir::{Dir, include_dir};
 use server::Error;
-use tower_http::compression::CompressionLayer;
 #[cfg(feature = "development_mode")]
 use tower_http::services::ServeDir;
+use tower_http::{compression::CompressionLayer, trace::TraceLayer};
 #[cfg(not(feature = "development_mode"))]
 use tower_serve_static::ServeDir as StaticServeDir;
+use tracing::info_span;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use types::{KeyValue, UpdateKeyValue};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| {
+                // axum logs rejections from built-in extractors with the `axum::rejection`
+                // target, at `TRACE` level. `axum::rejection=trace` enables showing those events
+                format!(
+                    "{}=debug,tower_http=debug,axum::rejection=trace",
+                    env!("CARGO_CRATE_NAME")
+                )
+                .into()
+            }),
+        )
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+
     let args = Args::parse();
 
     // Get port or default to a random port
@@ -83,6 +100,8 @@ async fn main() -> Result<(), Error> {
 
     eprintln!("App is running: {url}");
 
+    tracing::debug!("listening on {}", url);
+
     if args.open.unwrap_or(true) && webbrowser::Browser::is_available() {
         webbrowser::open(&url)?;
     }
@@ -98,7 +117,22 @@ async fn main() -> Result<(), Error> {
         )
         .fallback_service(static_dir.clone())
         .with_state(state)
-        .layer(compression_layer);
+        .layer(compression_layer)
+        .layer(
+            TraceLayer::new_for_http().make_span_with(|request: &Request<_>| {
+                let matched_path = request
+                    .extensions()
+                    .get::<MatchedPath>()
+                    .map(MatchedPath::as_str);
+
+                info_span!(
+                    "http_request",
+                    method = ?request.method(),
+                    matched_path,
+                    some_other_field = tracing::field::Empty,
+                )
+            }),
+        );
 
     axum::serve(listener, app).await?;
 
