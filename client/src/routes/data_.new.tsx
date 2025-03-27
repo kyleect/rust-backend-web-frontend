@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { KeyValue } from "server-types";
+import { notifications } from "@mantine/notifications";
 
 export const Route = createFileRoute("/data_/new")({
   component: RouteComponent,
@@ -49,6 +50,9 @@ function RouteComponent() {
             { key, value, is_secret: isSecret },
             {
               onSuccess: () => {
+                notifications.show({
+                  message: `Success saving creating key '${key}'`,
+                });
                 nav({ to: "/data/key/$key", params: { key } });
               },
               onError: (error) => console.error(error),

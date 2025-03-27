@@ -7,6 +7,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -90,6 +91,9 @@ function RouteComponent() {
           onClick={() => {
             updateKeyValue.mutate(updatedValue, {
               onSuccess: () => {
+                notifications.show({
+                  message: `Success updating key '${key}'`,
+                });
                 nav({ to: "/data/key/$key", params: { key } });
               },
             });

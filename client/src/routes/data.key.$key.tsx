@@ -1,4 +1,5 @@
 import { Badge, Button, Group, Stack, Table } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -108,6 +109,9 @@ function RouteComponent() {
           onClick={() => {
             deleteKeyValue.mutate(key, {
               onSuccess: () => {
+                notifications.show({
+                  message: `Deleted key '${key}'`,
+                });
                 nav({ to: "/data" });
               },
             });

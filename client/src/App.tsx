@@ -14,6 +14,9 @@ import {
 } from "@tanstack/react-router";
 import { MantineProvider, TypographyStylesProvider } from "@mantine/core";
 
+import "@mantine/notifications/styles.css";
+import { Notifications } from "@mantine/notifications";
+
 const hashHistory = createHashHistory();
 
 // Create a new router instance
@@ -33,6 +36,7 @@ export const App = () => (
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <MantineProvider defaultColorScheme="auto">
+        <Notifications />
         <TypographyStylesProvider>
           <RouterProvider router={router} />
         </TypographyStylesProvider>
