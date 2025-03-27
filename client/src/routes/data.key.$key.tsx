@@ -41,9 +41,15 @@ function RouteComponent() {
       await fetch(`/api/data/${key}`, {
         method: "DELETE",
       });
+    },
+    onSuccess: () => {
+      notifications.show({
+        message: `Deleted key '${key}'`,
+      });
 
       queryClient.invalidateQueries({ queryKey: ["data"] });
-      queryClient.invalidateQueries({ queryKey: ["data", key] });
+
+      nav({ to: "/data" });
     },
   });
 
@@ -107,14 +113,7 @@ function RouteComponent() {
         <Button
           color="red"
           onClick={() => {
-            deleteKeyValue.mutate(key, {
-              onSuccess: () => {
-                notifications.show({
-                  message: `Deleted key '${key}'`,
-                });
-                nav({ to: "/data" });
-              },
-            });
+            deleteKeyValue.mutate(key);
           }}
         >
           Delete

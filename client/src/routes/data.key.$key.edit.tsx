@@ -59,6 +59,13 @@ function RouteComponent() {
 
       queryClient.invalidateQueries({ queryKey: ["data", key] });
     },
+    onSuccess: () => {
+      notifications.show({
+        message: `Success updating key '${key}'`,
+      });
+
+      nav({ to: "/data/key/$key", params: { key } });
+    },
   });
 
   if (value.isPending) {
@@ -89,14 +96,7 @@ function RouteComponent() {
       <ButtonGroup>
         <Button
           onClick={() => {
-            updateKeyValue.mutate(updatedValue, {
-              onSuccess: () => {
-                notifications.show({
-                  message: `Success updating key '${key}'`,
-                });
-                nav({ to: "/data/key/$key", params: { key } });
-              },
-            });
+            updateKeyValue.mutate(updatedValue);
           }}
         >
           Save

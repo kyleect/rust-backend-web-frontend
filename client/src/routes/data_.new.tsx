@@ -36,6 +36,13 @@ function RouteComponent() {
 
       queryClient.invalidateQueries({ queryKey: ["data"] });
     },
+    onSuccess: () => {
+      notifications.show({
+        message: `Success saving creating key '${key}'`,
+      });
+      nav({ to: "/data/key/$key", params: { key } });
+    },
+    onError: (error) => console.error(error),
   });
 
   return (
@@ -46,18 +53,7 @@ function RouteComponent() {
         onSubmit={(e) => {
           e.preventDefault();
 
-          createKeyValue.mutate(
-            { key, value, is_secret: isSecret },
-            {
-              onSuccess: () => {
-                notifications.show({
-                  message: `Success saving creating key '${key}'`,
-                });
-                nav({ to: "/data/key/$key", params: { key } });
-              },
-              onError: (error) => console.error(error),
-            }
-          );
+          createKeyValue.mutate({ key, value, is_secret: isSecret });
         }}
       >
         <Stack>
