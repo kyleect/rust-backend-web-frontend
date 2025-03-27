@@ -21,11 +21,11 @@ fn main() {
                     .and_then(OsStr::to_str)
                     .map(str::to_owned)
             })
-            .filter(|f| f != "index")
+            .filter(|f| f != "index" && f != ".gitignore")
             .map(|f| format!("export * from \"./{}\"", f))
             .collect();
 
-        let mut file = File::create("./bindings/index.ts").unwrap();
+        let mut file = File::create("./bindings/exports.ts").unwrap();
         file.write_all(exports.join("\n").as_bytes()).unwrap();
     };
 }

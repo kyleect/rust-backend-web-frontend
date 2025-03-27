@@ -3,12 +3,16 @@ default:
 
 # Delete build artifacts
 clean:
-    rm -rf bindings/ dist/
+    git clean -d -x -f bindings/
+    rm -rf dist/
+
+export_bindings: clean
+    npm ci
+    cargo test export_bindings
 
 # Build the code
 build:
-    npm ci
-    cargo test export_bindings
+    just export_bindings
     cargo run --bin bundle_types --features bundle_types
     npm run build
 
