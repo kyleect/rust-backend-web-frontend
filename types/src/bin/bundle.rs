@@ -6,7 +6,7 @@ use std::{
 
 /// This bin is responsible for bundling the generated type bindings.
 /// It creates the file `./bindings/index.ts` with all type bindings exported.
-/// These *.ts files are then transpiled with typescript.
+/// These *.ts files are then transpiled with typescript in to `./dist/*.d.ts` files
 ///
 /// The final `./dist/index.d.ts` file is used for `package.json` types.
 fn main() {
