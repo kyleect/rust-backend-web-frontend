@@ -6,7 +6,7 @@ import { App } from "../src/App";
 import "@testing-library/jest-dom/vitest";
 
 describe("App", () => {
-  test.skip("renders", () => {
+  test("renders", () => {
     render(<App />);
 
     expect(screen.getByText("Home")).toBeVisible();
