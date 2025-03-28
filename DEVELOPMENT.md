@@ -33,7 +33,12 @@ This document provides guidance for developers looking to contribute to the `rus
    ```
 
 3. **Install Rust Dependencies:**
+
    You don't need to manually install dependencies for Rust; they're managed automatically when you build using Cargo.
+
+4. **Update app name:**
+
+   Edit the `app-name` variable in the root [justfile](./justfile). This controls the name of the binary using the `just install` command.
 
 ## Building the Project
 
@@ -55,11 +60,20 @@ To build the project, use Justfile commands:
 
 ## Running the Project
 
-- **Start the server and client in development mode:**
+- **Start the app in development mode:**
+
   ```bash
   just watch
   ```
-  This will watch for changes and rebuild the client automatically.
+
+  This will watch for changes and rebuild the types, server, and client automatically.
+
+- **Run the app in production mode:**
+
+  ```bash
+  just install-release
+  rust-web-app
+  ```
 
 ## Testing
 
