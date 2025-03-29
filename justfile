@@ -73,7 +73,7 @@ install-release: build-release
     cp target/release/server.exe ~/.cargo/bin/{{app-name}}.exe
 
 # Start the server and client in development mode
-watch:
+watch: build
   #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
   just watch-types
   just watch-client
