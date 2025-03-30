@@ -76,6 +76,7 @@ impl Display for Value {
 }
 impl From<&str> for Value {
     fn from(s: &str) -> Self {
-        Value(s.to_string())
+        let result = serde_json::from_str::<serde_json::Value>(s).expect("should be valid json");
+        Value(result.to_string())
     }
 }

@@ -1,3 +1,4 @@
+import { CodeHighlight } from "@mantine/code-highlight";
 import { Badge, Button, Group, Stack, Table } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -103,7 +104,9 @@ function RouteComponent() {
                 )}
               </Table.Td>
             ) : (
-              <Table.Td>{value.data.value}</Table.Td>
+              <Table.Td>
+                <CodeHighlight lang="json" code={value.data.value} />
+              </Table.Td>
             )}
           </Table.Tr>
         </Table.Tbody>

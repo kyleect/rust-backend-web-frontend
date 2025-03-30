@@ -3,8 +3,8 @@ import {
   Alert,
   Button,
   ButtonGroup,
+  JsonInput,
   Stack,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -72,6 +72,13 @@ function RouteComponent() {
     return <p>Loading...</p>;
   }
 
+  let isInvalidJsonValue = true;
+
+  try {
+    JSON.parse(updatedValue ?? "");
+    isInvalidJsonValue = false;
+  } catch (e) {}
+
   if (value.data?.is_secret) {
     return (
       <Stack>
@@ -87,17 +94,24 @@ function RouteComponent() {
     <Stack>
       <Title order={3}>Editing</Title>
 
-      <TextInput
+      <JsonInput
         label="Updated Value"
         value={updatedValue}
-        onChange={(e) => setUpdatedValue(e.target.value)}
+        onChange={(e) => setUpdatedValue(e)}
         autoFocus
+        formatOnBlur
       />
+
+      {isInvalidJsonValue && (
+        <Alert color="red">Must be a valid JSON value.</Alert>
+      )}
+
       <ButtonGroup>
         <Button
           onClick={() => {
             updateKeyValue.mutate(updatedValue);
           }}
+          disabled={isInvalidJsonValue}
         >
           Save
         </Button>

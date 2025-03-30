@@ -17,6 +17,8 @@ import { MantineProvider, TypographyStylesProvider } from "@mantine/core";
 import "@mantine/notifications/styles.css";
 import { Notifications } from "@mantine/notifications";
 
+import "@mantine/code-highlight/styles.css";
+
 const hashHistory = createHashHistory();
 
 // Create a new router instance
