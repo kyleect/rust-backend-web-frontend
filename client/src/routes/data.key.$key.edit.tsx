@@ -16,6 +16,7 @@ import {
 } from "@tanstack/react-router";
 import { useState } from "react";
 import { KeyValue, UpdateKeyValue } from "server-types";
+import { Validator } from "jsonschema";
 
 export const Route = createFileRoute("/data/key/$key/edit")({
   component: RouteComponent,
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/data/key/$key/edit")({
 function RouteComponent() {
   const queryClient = useQueryClient();
   const [updatedValue, setUpdatedValue] = useState("");
+  const [updatedSchema, setUpdatedSchema] = useState("");
   const nav = useNavigate({ from: "/data/key/$key/edit" });
 
   const key = useParams({
@@ -38,20 +40,17 @@ function RouteComponent() {
       const data = (await response.json()) as KeyValue;
 
       setUpdatedValue(data.value);
+      setUpdatedSchema(data.schema);
 
       return data;
     },
   });
 
   const updateKeyValue = useMutation({
-    mutationFn: async (value: string) => {
-      const body: UpdateKeyValue = {
-        value,
-      };
-
+    mutationFn: async (updatedKeyValue: UpdateKeyValue) => {
       await fetch(`/api/data/${key}`, {
         method: "PUT",
-        body: JSON.stringify(body),
+        body: JSON.stringify(updatedKeyValue),
         headers: {
           "content-type": "application/json",
         },
@@ -78,6 +77,31 @@ function RouteComponent() {
     JSON.parse(updatedValue ?? "");
     isInvalidJsonValue = false;
   } catch (e) {}
+
+  let isInvalidJsonSchema = true;
+
+  try {
+    JSON.parse(updatedSchema ?? "");
+    isInvalidJsonSchema = false;
+  } catch (e) {}
+
+  const validator = new Validator();
+
+  let hasValidationErrors = false;
+  let validationErrorsString = "";
+
+  try {
+    debugger;
+    const validationErrors = validator.validate(
+      JSON.parse(updatedValue),
+      JSON.parse(updatedSchema ?? "")
+    ).errors;
+
+    hasValidationErrors = validationErrors.length > 0;
+    validationErrorsString = validationErrors.toString();
+  } catch (e) {
+    debugger;
+  }
 
   if (value.data?.is_secret) {
     return (
@@ -106,12 +130,30 @@ function RouteComponent() {
         <Alert color="red">Must be a valid JSON value.</Alert>
       )}
 
+      {hasValidationErrors && (
+        <Alert color="red">{validationErrorsString}</Alert>
+      )}
+
+      <JsonInput
+        label="Updated Schema"
+        value={updatedSchema}
+        onChange={(e) => setUpdatedSchema(e)}
+        autosize
+      />
+
+      {isInvalidJsonSchema && (
+        <Alert color="red">Must be a valid JSON value.</Alert>
+      )}
+
       <ButtonGroup>
         <Button
           onClick={() => {
-            updateKeyValue.mutate(updatedValue);
+            updateKeyValue.mutate({
+              value: updatedValue,
+              schema: updatedSchema,
+            });
           }}
-          disabled={isInvalidJsonValue}
+          disabled={isInvalidJsonValue || hasValidationErrors}
         >
           Save
         </Button>

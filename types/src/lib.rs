@@ -9,24 +9,27 @@ use ts_rs::TS;
 pub struct KeyValue {
     pub key: Key,
     pub value: Value,
+    pub schema: String,
     pub is_secret: bool,
 }
 
 impl KeyValue {
     /// Create a new key value
-    pub fn new(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+    pub fn new(key: impl Into<Key>, value: impl Into<Value>, schema: Option<&str>) -> Self {
         Self {
             key: key.into(),
             value: value.into(),
+            schema: schema.unwrap_or(r#"{"type": "string"}"#).to_string(),
             is_secret: false,
         }
     }
 
     /// Create a new key value desecret
-    pub fn new_secret(key: impl Into<Key>, value: impl Into<Value>) -> Self {
+    pub fn new_secret(key: impl Into<Key>, value: impl Into<Value>, schema: Option<&str>) -> Self {
         Self {
             key: key.into(),
             value: value.into(),
+            schema: schema.unwrap_or(r#"{"type": "string"}"#).to_string(),
             is_secret: true,
         }
     }
@@ -37,12 +40,14 @@ impl KeyValue {
 #[ts(export)]
 pub struct UpdateKeyValue {
     pub value: Value,
+    pub schema: String,
 }
 
 impl UpdateKeyValue {
-    pub fn new(value: impl Into<Value>) -> Self {
+    pub fn new(value: impl Into<Value>, schema: &str) -> Self {
         Self {
             value: value.into(),
+            schema: schema.to_string(),
         }
     }
 }

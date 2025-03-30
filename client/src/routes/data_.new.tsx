@@ -1,9 +1,18 @@
-import { Button, Stack, Switch, TextInput, Title } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  JsonInput,
+  Stack,
+  Switch,
+  TextInput,
+  Title,
+} from "@mantine/core";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { KeyValue } from "server-types";
 import { notifications } from "@mantine/notifications";
+import { Validator } from "jsonschema";
 
 export const Route = createFileRoute("/data_/new")({
   component: RouteComponent,
@@ -13,6 +22,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const [schema, setSchema] = useState<string>(`{"type": "string"}`);
   const [isSecret, setIsSecret] = useState(false);
   const nav = useNavigate({ from: "/data/new" });
 
@@ -23,6 +33,7 @@ function RouteComponent() {
       const body: KeyValue = {
         key,
         value,
+        schema,
         is_secret,
       };
 
@@ -45,6 +56,38 @@ function RouteComponent() {
     onError: (error) => console.error(error),
   });
 
+  let isInvalidJsonValue = true;
+
+  try {
+    JSON.parse(value ?? "");
+    isInvalidJsonValue = false;
+  } catch (e) {}
+
+  let isInvalidJsonSchema = true;
+
+  try {
+    JSON.parse(schema ?? "");
+    isInvalidJsonSchema = false;
+  } catch (e) {}
+
+  const validator = new Validator();
+
+  let hasValidationErrors = false;
+  let validationErrorsString = "";
+
+  try {
+    debugger;
+    const validationErrors = validator.validate(
+      JSON.parse(value),
+      JSON.parse(schema ?? "")
+    ).errors;
+
+    hasValidationErrors = validationErrors.length > 0;
+    validationErrorsString = validationErrors.toString();
+  } catch (e) {
+    debugger;
+  }
+
   return (
     <Stack>
       <Title order={2}>Keys</Title>
@@ -53,7 +96,7 @@ function RouteComponent() {
         onSubmit={(e) => {
           e.preventDefault();
 
-          createKeyValue.mutate({ key, value, is_secret: isSecret });
+          createKeyValue.mutate({ key, value, schema, is_secret: isSecret });
         }}
       >
         <Stack>
@@ -69,6 +112,24 @@ function RouteComponent() {
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
+
+          {isInvalidJsonValue && (
+            <Alert color="red">Must be a valid JSON value.</Alert>
+          )}
+
+          {hasValidationErrors && (
+            <Alert color="red">{validationErrorsString}</Alert>
+          )}
+
+          <JsonInput
+            label="Schema"
+            value={schema}
+            onChange={(e) => setSchema(e)}
+          />
+
+          {isInvalidJsonSchema && (
+            <Alert color="red">Must be a valid JSON value.</Alert>
+          )}
 
           <Switch
             label="This is a secret"

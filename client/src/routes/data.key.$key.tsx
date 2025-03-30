@@ -77,7 +77,11 @@ function RouteComponent() {
               <Table.Td>
                 {showSecret ? (
                   <Group>
-                    <span>{value.data.value}</span>
+                    <CodeHighlight
+                      lang="json"
+                      code={value.data.value}
+                      withCopyButton={false}
+                    />
                     <Button
                       variant="outline"
                       size="compact-xs"
@@ -105,9 +109,24 @@ function RouteComponent() {
               </Table.Td>
             ) : (
               <Table.Td>
-                <CodeHighlight lang="json" code={value.data.value} />
+                <CodeHighlight
+                  lang="json"
+                  code={value.data.value}
+                  withCopyButton={false}
+                />
               </Table.Td>
             )}
+          </Table.Tr>
+
+          <Table.Tr>
+            <Table.Th>Schema</Table.Th>
+            <Table.Td>
+              <CodeHighlight
+                lang="json"
+                code={value.data.schema}
+                withCopyButton={false}
+              />
+            </Table.Td>
           </Table.Tr>
         </Table.Tbody>
       </Table>
