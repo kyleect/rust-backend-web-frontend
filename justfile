@@ -128,9 +128,9 @@ clean-git-branches:
 e2e:
   #!/usr/bin/env sh
 
-  just build
+  just build-release
 
-  ./target/debug/server --port 3000 --open false &
+  ./target/release/server --port 3000 --open false &
   SERVER_PID=$!
 
   echo "Server started on process id $SERVER_PID"
