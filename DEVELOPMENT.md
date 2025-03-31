@@ -7,6 +7,7 @@ This document provides guidance for developers looking to contribute to the `rus
 - [Rust](https://www.rust-lang.org/) (with support for clippy, rustfmt, and the stable toolchain)
 - [Node.js](https://nodejs.org/) and npm
 - [Just](https://github.com/casey/just), a command runner
+- A \*nix like environment for commands like `parallel` and `watchexec`
 
 ## Project Structure
 
