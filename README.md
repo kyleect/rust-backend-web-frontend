@@ -27,6 +27,7 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md) for instructions on how to set up the pro
 - Shared types between backend and frontend (Rust -> Typescript type generation)
 - Development mode (hot-reloading client, recompiling server & types)
 - Tracing/logging in server
+- E2E tests provided by Playwright
 
 ## Todo
 

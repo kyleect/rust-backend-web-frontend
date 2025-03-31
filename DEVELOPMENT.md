@@ -83,6 +83,14 @@ To build the project, use Justfile commands:
   just test
   ```
 
+- **Run E2E tests:**
+
+  This builds the app's binary, runs it, then runs a suite of Playwright tests against the running app. The app is then shut down after the tests are done.
+
+  ```bash
+  just e2e
+  ```
+
 ## Linting and Formatting
 
 - **Lint the code:**
