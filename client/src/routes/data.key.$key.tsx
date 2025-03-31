@@ -1,5 +1,5 @@
 import { CodeHighlight } from "@mantine/code-highlight";
-import { Badge, Button, Group, Stack, Table } from "@mantine/core";
+import { Button, Group, Stack, Table } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -72,53 +72,6 @@ function RouteComponent() {
           </Table.Tr>
 
           <Table.Tr>
-            <Table.Th>Value {value.data.is_secret && "🔒"}</Table.Th>
-            {value.data.is_secret ? (
-              <Table.Td>
-                {showSecret ? (
-                  <Group>
-                    <CodeHighlight
-                      lang="json"
-                      code={value.data.value}
-                      withCopyButton={false}
-                    />
-                    <Button
-                      variant="outline"
-                      size="compact-xs"
-                      onClick={() => {
-                        setShowSecret(false);
-                      }}
-                    >
-                      Hide
-                    </Button>
-                  </Group>
-                ) : (
-                  <Group>
-                    <Badge color="gray">Secret Value</Badge>
-                    <Button
-                      variant="outline"
-                      size="compact-xs"
-                      onClick={() => {
-                        setShowSecret(true);
-                      }}
-                    >
-                      Reveal
-                    </Button>
-                  </Group>
-                )}
-              </Table.Td>
-            ) : (
-              <Table.Td>
-                <CodeHighlight
-                  lang="json"
-                  code={value.data.value}
-                  withCopyButton={false}
-                />
-              </Table.Td>
-            )}
-          </Table.Tr>
-
-          <Table.Tr>
             <Table.Th>Schema</Table.Th>
             <Table.Td>
               <CodeHighlight
@@ -127,6 +80,49 @@ function RouteComponent() {
                 withCopyButton={false}
               />
             </Table.Td>
+          </Table.Tr>
+
+          <Table.Tr>
+            <Table.Th>Value</Table.Th>
+            {value.data.is_secret ? (
+              <Table.Td>
+                {showSecret ? (
+                  <Group>
+                    <CodeHighlight lang="json" code={value.data.value} />
+                    <Button
+                      variant="outline"
+                      size="compact-xs"
+                      onClick={() => {
+                        setShowSecret(false);
+                      }}
+                    >
+                      Hide Secret
+                    </Button>
+                  </Group>
+                ) : (
+                  <Group>
+                    <CodeHighlight
+                      lang="plaintext"
+                      code="********"
+                      withCopyButton={false}
+                    />
+                    <Button
+                      variant="outline"
+                      size="compact-xs"
+                      onClick={() => {
+                        setShowSecret(true);
+                      }}
+                    >
+                      Reveal Secret
+                    </Button>
+                  </Group>
+                )}
+              </Table.Td>
+            ) : (
+              <Table.Td>
+                <CodeHighlight lang="json" code={value.data.value} />
+              </Table.Td>
+            )}
           </Table.Tr>
         </Table.Tbody>
       </Table>

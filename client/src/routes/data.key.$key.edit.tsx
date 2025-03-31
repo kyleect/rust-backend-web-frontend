@@ -153,7 +153,9 @@ function RouteComponent() {
               schema: updatedSchema,
             });
           }}
-          disabled={isInvalidJsonValue || hasValidationErrors}
+          disabled={
+            isInvalidJsonValue || hasValidationErrors || isInvalidJsonSchema
+          }
         >
           Save
         </Button>

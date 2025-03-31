@@ -1,6 +1,7 @@
 import {
   Alert,
   Button,
+  ButtonGroup,
   JsonInput,
   Stack,
   Switch,
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/data_/new")({
 function RouteComponent() {
   const queryClient = useQueryClient();
   const [key, setKey] = useState<string>("");
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(`""`);
   const [schema, setSchema] = useState<string>(`{"type": "string"}`);
   const [isSecret, setIsSecret] = useState(false);
   const nav = useNavigate({ from: "/data/new" });
@@ -107,6 +108,16 @@ function RouteComponent() {
             autoFocus
           />
 
+          <JsonInput
+            label="Schema"
+            value={schema}
+            onChange={(e) => setSchema(e)}
+          />
+
+          {isInvalidJsonSchema && (
+            <Alert color="red">Must be a valid JSON value.</Alert>
+          )}
+
           <TextInput
             label="Value"
             value={value}
@@ -121,23 +132,35 @@ function RouteComponent() {
             <Alert color="red">{validationErrorsString}</Alert>
           )}
 
-          <JsonInput
-            label="Schema"
-            value={schema}
-            onChange={(e) => setSchema(e)}
-          />
-
-          {isInvalidJsonSchema && (
-            <Alert color="red">Must be a valid JSON value.</Alert>
-          )}
-
           <Switch
             label="This is a secret"
             checked={isSecret}
             onChange={(event) => setIsSecret(event.target.checked)}
           />
 
-          <Button type="submit">Save</Button>
+          {isSecret && (
+            <Alert
+              color="yellow"
+              variant="outline"
+              title="Secrets are immutable"
+            >
+              Secrets can't be edited after creation. You'll need to delete and
+              recreate them with new value.
+            </Alert>
+          )}
+
+          <ButtonGroup>
+            <Button type="submit">Save</Button>
+
+            <Button
+              variant="outline"
+              onClick={() => {
+                nav({ to: "/data" });
+              }}
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
         </Stack>
       </form>
     </Stack>
