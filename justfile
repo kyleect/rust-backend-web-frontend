@@ -130,10 +130,14 @@ e2e:
 
   just build
 
-  ./target/debug/server &
+  ./target/debug/server --port 3000 --open false &
   SERVER_PID=$!
+
+  echo "Server started on process id $SERVER_PID"
   
   cd e2e
   npm run test
+
+  echo "Killing Server started at process id $SERVER_PID"
 
   kill $SERVER_PID

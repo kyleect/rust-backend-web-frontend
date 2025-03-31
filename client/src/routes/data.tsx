@@ -1,4 +1,4 @@
-import { Grid, Stack, Table, Title } from "@mantine/core";
+import { Grid, Group, Stack, Table, Title } from "@mantine/core";
 import { useScrollIntoView } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -75,7 +75,10 @@ function RouteComponent() {
         Keys
       </Title>
 
-      <Link to="/data/new">Add</Link>
+      <Group>
+        <Link to="/data/new">Add New Value</Link>
+        <Link to="/data/new_secret">Add New Secret</Link>
+      </Group>
 
       {isViewingDataKey ? (
         <Grid>

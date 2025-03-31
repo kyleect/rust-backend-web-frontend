@@ -57,46 +57,7 @@ async fn main() -> Result<(), Error> {
         StaticServeDir::new(&ASSETS_DIR)
     };
 
-    let state = Arc::new(Mutex::new(AppState {
-        data: vec![
-            KeyValue::new("test-key", "\"test value\"", None),
-            KeyValue::new_secret(
-                "test-key2",
-                "[1, 2, 3]",
-                Some(r#"{"type": "array", "items": ["number"]}"#),
-            ),
-            KeyValue::new("test-key3", "\"test value 3\"", None),
-            KeyValue::new("test-key4", "\"test value 4\"", None),
-            KeyValue::new("test-key5", "\"test value 5\"", None),
-            KeyValue::new("test-key6", "\"test value 6\"", None),
-            KeyValue::new("test-key7", "\"test value 7\"", None),
-            KeyValue::new("test-key8", "\"test value 8\"", None),
-            KeyValue::new("test-keyb", "\"test valueb\"", None),
-            KeyValue::new("test-keyb2", "\"test valueb 2\"", None),
-            KeyValue::new("test-keyb3", "\"test valueb 3\"", None),
-            KeyValue::new("test-keyb4", "\"test valueb 4\"", None),
-            KeyValue::new("test-keyb5", "\"test valueb 5\"", None),
-            KeyValue::new("test-keyb6", "\"test valueb 6\"", None),
-            KeyValue::new("test-keyb7", "\"test valueb 7\"", None),
-            KeyValue::new("test-keyb8", "\"test valueb 8\"", None),
-            KeyValue::new("test-kecy", "\"test valuec\"", None),
-            KeyValue::new("test-keyc2", "\"test valuec 2\"", None),
-            KeyValue::new("test-keyc3", "\"test valuec 3\"", None),
-            KeyValue::new("test-keyc4", "\"test valuec 4\"", None),
-            KeyValue::new("test-keyc5", "\"test valuec 5\"", None),
-            KeyValue::new("test-keyc6", "\"test valuec 6\"", None),
-            KeyValue::new("test-keyc7", "\"test valuec 7\"", None),
-            KeyValue::new("test-keyc8", "\"test valuec 8\"", None),
-            KeyValue::new("test-keyd", "\"test valued\"", None),
-            KeyValue::new("test-keyd2", "\"test valued 2\"", None),
-            KeyValue::new("test-keyd3", "\"test valued 3\"", None),
-            KeyValue::new("test-keyd4", "\"test valued 4\"", None),
-            KeyValue::new("test-keyd5", "\"test valued 5\"", None),
-            KeyValue::new("test-keyd6", "\"test valued 6\"", None),
-            KeyValue::new("test-keyd7", "\"test valued 7\"", None),
-            KeyValue::new("test-keyd8", "\"test valued 8\"", None),
-        ],
-    }));
+    let state = Arc::new(Mutex::new(AppState { data: vec![] }));
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port)).await?;
     let addr = listener.local_addr()?;

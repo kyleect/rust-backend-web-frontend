@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as DataImport } from './routes/data'
 import { Route as IndexImport } from './routes/index'
+import { Route as DataNewsecretImport } from './routes/data_.new_secret'
 import { Route as DataNewImport } from './routes/data_.new'
 import { Route as DataKeyKeyImport } from './routes/data.key.$key'
 import { Route as DataKeyKeyEditImport } from './routes/data.key.$key.edit'
@@ -28,6 +29,12 @@ const DataRoute = DataImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DataNewsecretRoute = DataNewsecretImport.update({
+  id: '/data_/new_secret',
+  path: '/data/new_secret',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -72,6 +79,13 @@ declare module '@tanstack/react-router' {
       path: '/data/new'
       fullPath: '/data/new'
       preLoaderRoute: typeof DataNewImport
+      parentRoute: typeof rootRoute
+    }
+    '/data_/new_secret': {
+      id: '/data_/new_secret'
+      path: '/data/new_secret'
+      fullPath: '/data/new_secret'
+      preLoaderRoute: typeof DataNewsecretImport
       parentRoute: typeof rootRoute
     }
     '/data/key/$key': {
@@ -119,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/data': typeof DataRouteWithChildren
   '/data/new': typeof DataNewRoute
+  '/data/new_secret': typeof DataNewsecretRoute
   '/data/key/$key': typeof DataKeyKeyRouteWithChildren
   '/data/key/$key/edit': typeof DataKeyKeyEditRoute
 }
@@ -127,6 +142,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/data': typeof DataRouteWithChildren
   '/data/new': typeof DataNewRoute
+  '/data/new_secret': typeof DataNewsecretRoute
   '/data/key/$key': typeof DataKeyKeyRouteWithChildren
   '/data/key/$key/edit': typeof DataKeyKeyEditRoute
 }
@@ -136,6 +152,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/data': typeof DataRouteWithChildren
   '/data_/new': typeof DataNewRoute
+  '/data_/new_secret': typeof DataNewsecretRoute
   '/data/key/$key': typeof DataKeyKeyRouteWithChildren
   '/data/key/$key/edit': typeof DataKeyKeyEditRoute
 }
@@ -146,15 +163,23 @@ export interface FileRouteTypes {
     | '/'
     | '/data'
     | '/data/new'
+    | '/data/new_secret'
     | '/data/key/$key'
     | '/data/key/$key/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/data' | '/data/new' | '/data/key/$key' | '/data/key/$key/edit'
+  to:
+    | '/'
+    | '/data'
+    | '/data/new'
+    | '/data/new_secret'
+    | '/data/key/$key'
+    | '/data/key/$key/edit'
   id:
     | '__root__'
     | '/'
     | '/data'
     | '/data_/new'
+    | '/data_/new_secret'
     | '/data/key/$key'
     | '/data/key/$key/edit'
   fileRoutesById: FileRoutesById
@@ -164,12 +189,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DataRoute: typeof DataRouteWithChildren
   DataNewRoute: typeof DataNewRoute
+  DataNewsecretRoute: typeof DataNewsecretRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DataRoute: DataRouteWithChildren,
   DataNewRoute: DataNewRoute,
+  DataNewsecretRoute: DataNewsecretRoute,
 }
 
 export const routeTree = rootRoute
@@ -184,7 +211,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/data",
-        "/data_/new"
+        "/data_/new",
+        "/data_/new_secret"
       ]
     },
     "/": {
@@ -198,6 +226,9 @@ export const routeTree = rootRoute
     },
     "/data_/new": {
       "filePath": "data_.new.tsx"
+    },
+    "/data_/new_secret": {
+      "filePath": "data_.new_secret.tsx"
     },
     "/data/key/$key": {
       "filePath": "data.key.$key.tsx",

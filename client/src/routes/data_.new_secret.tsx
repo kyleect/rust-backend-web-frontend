@@ -15,7 +15,7 @@ import { KeyValue } from "server-types";
 import { notifications } from "@mantine/notifications";
 import { Validator } from "jsonschema";
 
-export const Route = createFileRoute("/data_/new")({
+export const Route = createFileRoute("/data_/new_secret")({
   component: RouteComponent,
 });
 
@@ -24,7 +24,7 @@ function RouteComponent() {
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>(`""`);
   const [schema, setSchema] = useState<string>(`{"type": "string"}`);
-  const nav = useNavigate({ from: "/data/new" });
+  const nav = useNavigate({ from: "/data/new_secret" });
 
   const createKeyValue = useMutation({
     mutationFn: async (keyValue: KeyValue) => {
@@ -49,7 +49,7 @@ function RouteComponent() {
     },
     onSuccess: () => {
       notifications.show({
-        message: `Success saving creating secret '${key}'`,
+        message: `Success saving creating key '${key}'`,
       });
       nav({ to: "/data/key/$key", params: { key } });
     },
@@ -89,13 +89,13 @@ function RouteComponent() {
     <Stack>
       <Title order={2}>Keys</Title>
 
-      <Title order={3}>New Value</Title>
+      <Title order={3}>New Secret</Title>
 
       <form
         onSubmit={(e) => {
           e.preventDefault();
 
-          createKeyValue.mutate({ key, value, schema, is_secret: false });
+          createKeyValue.mutate({ key, value, schema, is_secret: true });
         }}
       >
         <Stack>
@@ -104,6 +104,20 @@ function RouteComponent() {
             value={key}
             onChange={(e) => setKey(e.target.value)}
             autoFocus
+          />
+
+          <Alert color="yellow" variant="outline" title="Secrets are immutable">
+            Secrets can't be edited after creation. You'll need to delete and
+            recreate them with new value.
+          </Alert>
+
+          <NavLink
+            label="Wanted to create a value instead?"
+            component={Link}
+            to="/data/new"
+            activeProps={{
+              style: { fontWeight: "bold" },
+            }}
           />
 
           <JsonInput
@@ -130,20 +144,11 @@ function RouteComponent() {
             <Alert color="red">{validationErrorsString}</Alert>
           )}
 
-          <NavLink
-            label="Wanted to create a secret instead?"
-            component={Link}
-            to="/data/new_secret"
-            activeProps={{
-              style: { fontWeight: "bold" },
-            }}
-          />
-
           <ButtonGroup>
             <Button
               type="submit"
               disabled={
-                isInvalidJsonValue || isInvalidJsonSchema || hasValidationErrors
+                isInvalidJsonValue || hasValidationErrors || isInvalidJsonSchema
               }
             >
               Save
