@@ -11,9 +11,10 @@ This document provides guidance for developers looking to contribute to the `rus
 
 ## Project Structure
 
-- **types:** Shared types used by `server` and `client`
-- **server:** Backend/API server for `client` served at `localhost:{port}/api`. It also statically serves `client` at `localhost:{port}/`.
-- **client:** Frontend client that calls `server`.
+- **[types](./types/):** Shared types used by `server` and `client`
+- **[client](./client/):** Frontend client that calls `server`.
+- **[server](./server/):** Backend/API server for `client` served at `localhost:{port}/api`. It also statically serves `client` at `localhost:{port}/`.
+- **[e2e](./e2e/):** End-to-end tests that run against the release build of the server/client.
 
 ## Setting Up
 
