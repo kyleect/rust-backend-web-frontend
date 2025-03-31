@@ -1,9 +1,9 @@
 import {
   Alert,
+  Anchor,
   Button,
   ButtonGroup,
   JsonInput,
-  NavLink,
   Stack,
   TextInput,
   Title,
@@ -106,6 +106,10 @@ function RouteComponent() {
             autoFocus
           />
 
+          <Anchor size="sm" component={Link} to="/data/new_secret">
+            Wanted to create a secret instead?
+          </Anchor>
+
           <JsonInput
             label="Schema"
             value={schema}
@@ -129,15 +133,6 @@ function RouteComponent() {
           {hasValidationErrors && (
             <Alert color="red">{validationErrorsString}</Alert>
           )}
-
-          <NavLink
-            label="Wanted to create a secret instead?"
-            component={Link}
-            to="/data/new_secret"
-            activeProps={{
-              style: { fontWeight: "bold" },
-            }}
-          />
 
           <ButtonGroup>
             <Button
