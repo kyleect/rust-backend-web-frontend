@@ -124,3 +124,16 @@ test:
 # Remove local branches that have been merged upstream
 clean-git-branches:
     git branch -d $(git branch --merged=main | grep -v main) && git fetch --prune
+
+e2e:
+  #!/usr/bin/env sh
+
+  just build
+
+  ./target/debug/server &
+  SERVER_PID=$!
+  
+  cd e2e
+  npm run test
+
+  kill $SERVER_PID

@@ -1,0 +1,21 @@
+app-name := "rust-web-app"
+
+default:
+    @just --list
+
+# Delete build artifacts for server and client
+clean:
+    rm -rf playwright-report
+    rm -rf test-suites
+
+# Build the code
+build:
+    echo 'No build'
+
+# Build the code for release
+build-release:
+    echo 'No build for release'
+
+# Run all tests
+test:
+    npm run test
