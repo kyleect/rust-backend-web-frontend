@@ -77,7 +77,6 @@ function RouteComponent() {
   let validationErrorsString = "";
 
   try {
-    debugger;
     const validationErrors = validator.validate(
       JSON.parse(value),
       JSON.parse(schema ?? "")
@@ -85,9 +84,7 @@ function RouteComponent() {
 
     hasValidationErrors = validationErrors.length > 0;
     validationErrorsString = validationErrors.toString();
-  } catch (e) {
-    debugger;
-  }
+  } catch (e) {}
 
   return (
     <Stack>

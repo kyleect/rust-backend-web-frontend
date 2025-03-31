@@ -91,7 +91,6 @@ function RouteComponent() {
   let validationErrorsString = "";
 
   try {
-    debugger;
     const validationErrors = validator.validate(
       JSON.parse(updatedValue),
       JSON.parse(updatedSchema ?? "")
@@ -99,9 +98,7 @@ function RouteComponent() {
 
     hasValidationErrors = validationErrors.length > 0;
     validationErrorsString = validationErrors.toString();
-  } catch (e) {
-    debugger;
-  }
+  } catch (e) {}
 
   if (value.data?.is_secret) {
     return (

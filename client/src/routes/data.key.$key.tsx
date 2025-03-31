@@ -86,37 +86,38 @@ function RouteComponent() {
             <Table.Th>Value</Table.Th>
             {value.data.is_secret ? (
               <Table.Td>
-                {showSecret ? (
-                  <Group>
-                    <CodeHighlight lang="json" code={value.data.value} />
-                    <Button
-                      variant="outline"
-                      size="compact-xs"
-                      onClick={() => {
-                        setShowSecret(false);
-                      }}
-                    >
-                      Hide Secret
-                    </Button>
-                  </Group>
-                ) : (
-                  <Group>
-                    <CodeHighlight
-                      lang="plaintext"
-                      code="********"
-                      withCopyButton={false}
-                    />
-                    <Button
-                      variant="outline"
-                      size="compact-xs"
-                      onClick={() => {
-                        setShowSecret(true);
-                      }}
-                    >
-                      Reveal Secret
-                    </Button>
-                  </Group>
-                )}
+                <Stack>
+                  {showSecret ? (
+                    <>
+                      <CodeHighlight lang="json" code={value.data.value} />
+                      <Button
+                        variant="outline"
+                        size="compact-xs"
+                        onClick={() => {
+                          setShowSecret(false);
+                        }}
+                      >
+                        Hide Secret
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <CodeHighlight
+                        lang="plaintext"
+                        code="********"
+                        withCopyButton={false}
+                      />
+                      <Button
+                        size="compact-xs"
+                        onClick={() => {
+                          setShowSecret(true);
+                        }}
+                      >
+                        Reveal Secret
+                      </Button>
+                    </>
+                  )}
+                </Stack>
               </Table.Td>
             ) : (
               <Table.Td>
