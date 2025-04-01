@@ -1,10 +1,11 @@
 import {
   Alert,
+  Anchor,
   Button,
   ButtonGroup,
   JsonInput,
-  NavLink,
   Stack,
+  Text,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -107,18 +108,15 @@ function RouteComponent() {
           />
 
           <Alert color="yellow" variant="outline" title="Secrets are immutable">
-            Secrets can't be edited after creation. You'll need to delete and
-            recreate them with new value.
-          </Alert>
+            <Text size="sm">
+              Secrets can't be edited after creation. You'll need to delete and
+              recreate them with new value.
+            </Text>
 
-          <NavLink
-            label="Wanted to create a value instead?"
-            component={Link}
-            to="/data/new"
-            activeProps={{
-              style: { fontWeight: "bold" },
-            }}
-          />
+            <Anchor size="sm" component={Link} to="/data/new">
+              Wanted to create a value instead?
+            </Anchor>
+          </Alert>
 
           <JsonInput
             label="Schema"

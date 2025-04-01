@@ -1,5 +1,7 @@
 # rust-backend-web-frontend
 
+[![build-artifacts](https://github.com/kyleect/rust-backend-web-frontend/actions/workflows/build-artifacts.yml/badge.svg)](https://github.com/kyleect/rust-backend-web-frontend/actions/workflows/build-artifacts.yml)
+
 Template for a backend API in Rust statically serving a frontend in React.
 
 ## Getting Started
