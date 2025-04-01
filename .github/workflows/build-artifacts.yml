@@ -66,7 +66,7 @@ jobs:
       - name: Build
         run: just build-release
       - name: E2E
-        run: run e2e
+        run: just e2e
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
@@ -75,7 +75,7 @@ jobs:
 
   build-mac:
     runs-on: macos-latest
-    needs: [e2e]
+    needs: [verify]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -104,7 +104,7 @@ jobs:
       - name: Build
         run: just build-release
       - name: E2E
-        run: run e2e
+        run: just e2e
       - name: Upload CLI Binary
         uses: actions/upload-artifact@v4
         with:
@@ -112,7 +112,7 @@ jobs:
           path: target/release/server
   build-windows:
     runs-on: windows-latest
-    needs: [e2e]
+    needs: [verify]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -141,7 +141,7 @@ jobs:
       - name: Build
         run: just build-release
       - name: E2E
-        run: run e2e
+        run: just e2e
       - name: Upload CLI Binary
         uses: actions/upload-artifact@v4
         with:
