@@ -19,6 +19,7 @@ jobs:
           cache-dependency-path: |
             types/package-lock.json
             client/package-lock.json
+            e2e/package-lock.json
           node-version: 20
       - name: "Install NPM Deps: types"
         working-directory: types
@@ -26,9 +27,14 @@ jobs:
       - name: "Install NPM Deps: client"
         working-directory: client
         run: npm ci
+      - name: "Install NPM Deps: e2e"
+        working-directory: e2e
+        run: npm ci && npx playwright install --with-deps
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
           tool: just
       - name: Verify
         run: just verify
+      - name: E2E
+        run: just e2e
