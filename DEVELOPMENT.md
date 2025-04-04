@@ -42,6 +42,10 @@ This document provides guidance for developers looking to contribute to the `rus
 
    Edit the `app-name` variable in the root [justfile](./justfile). This controls the name of the binary using the `just install` command.
 
+## Cleaning Up For Use As A Project Template
+
+See [USING_AS_A_TEMPLATE.md](./USING_AS_A_TEMPLATE.md) for more details on how to clean up the project for use as a template.
+
 ## Building the Project
 
 To build the project, use Justfile commands:
