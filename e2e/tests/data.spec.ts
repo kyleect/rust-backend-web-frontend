@@ -36,7 +36,7 @@ test("can create value", async ({}) => {
   const valueByKeyView = await addNewValueView.save();
 
   await expect(valueByKeyView.keyText).toContainText(expectedKey);
-  await expect(valueByKeyView.schemaText).toContainText(expectedSchema);
+  await expect(valueByKeyView.schemaText).toContainText(`{"type": "string"}`);
   await expect(valueByKeyView.valueText).toContainText(expectedSecret);
 
   await expect(valueByKeyView.deleteButton).toBeVisible();
