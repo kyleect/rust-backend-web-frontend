@@ -43,7 +43,7 @@ function RouteComponent() {
   }
 
   const table = (
-    <Table>
+    <Table data-testid="keys-table">
       <Table.Tbody>
         {values.data?.map((value) => (
           <Table.Tr key={value.key}>
@@ -70,7 +70,7 @@ function RouteComponent() {
   );
 
   return (
-    <Stack>
+    <Stack data-testid="data">
       <Title order={2} ref={targetRef}>
         Keys
       </Title>

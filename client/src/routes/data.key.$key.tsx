@@ -63,17 +63,19 @@ function RouteComponent() {
   }
 
   return (
-    <Stack>
+    <Stack data-testid="data-view">
       <Table variant="vertical" layout="fixed">
         <Table.Tbody>
           <Table.Tr>
             <Table.Th w={100}>Key</Table.Th>
-            <Table.Td>{value.data.key}</Table.Td>
+            <Table.Td>
+              <span data-testid="key">{value.data.key}</span>
+            </Table.Td>
           </Table.Tr>
 
           <Table.Tr>
             <Table.Th>Schema</Table.Th>
-            <Table.Td>
+            <Table.Td data-testid="schema">
               <CodeHighlight
                 lang="json"
                 code={value.data.schema}
@@ -85,7 +87,7 @@ function RouteComponent() {
           <Table.Tr>
             <Table.Th>Value</Table.Th>
             {value.data.is_secret ? (
-              <Table.Td>
+              <Table.Td data-testid="value">
                 <Stack>
                   {showSecret ? (
                     <>
@@ -120,7 +122,7 @@ function RouteComponent() {
                 </Stack>
               </Table.Td>
             ) : (
-              <Table.Td>
+              <Table.Td data-testid="value">
                 <CodeHighlight lang="json" code={value.data.value} />
               </Table.Td>
             )}

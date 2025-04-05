@@ -102,7 +102,7 @@ function RouteComponent() {
 
   if (value.data?.is_secret) {
     return (
-      <Stack>
+      <Stack data-testid="data-edit">
         <Title order={3}>Editing</Title>
         <Alert title="Secrets can't be edited!" variant="outline" color="red">
           Please delete and re-add secret with the desired value.
@@ -112,7 +112,7 @@ function RouteComponent() {
   }
 
   return (
-    <Stack>
+    <Stack data-testid="data-edit">
       <Title order={3}>Editing</Title>
 
       <JsonInput

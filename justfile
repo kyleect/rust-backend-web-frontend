@@ -141,3 +141,6 @@ e2e:
   echo "Killing Server started at process id $SERVER_PID"
 
   kill $SERVER_PID
+
+e2e-report:
+  cd e2e && npm run report

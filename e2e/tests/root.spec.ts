@@ -1,19 +1,22 @@
 import { test, expect } from "@playwright/test";
+import { RootView } from "../src";
+
+let root: RootView;
+
+test.beforeEach(async ({ page }) => {
+  root = new RootView(page);
+
+  await root.goto();
+});
 
 test("has title", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-
   await expect(page).toHaveTitle("rust-backend-web-frontend");
 });
 
 test("has home link", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-
-  await expect(page.getByRole("link", { name: "Home" })).toBeVisible();
+  await expect(root.homeLink).toBeVisible();
 });
 
 test("has data link", async ({ page }) => {
-  await page.goto("http://localhost:3000/");
-
-  await expect(page.getByRole("link", { name: "Data" })).toBeVisible();
+  await expect(root.dataLink).toBeVisible();
 });

@@ -12,6 +12,7 @@ export const Route = createRootRoute({
           width: 200,
           breakpoint: "sm",
         }}
+        data-testid="root"
       >
         <AppShell.Navbar>
           <NavLink

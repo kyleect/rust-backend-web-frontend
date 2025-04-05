@@ -86,7 +86,7 @@ function RouteComponent() {
   } catch (e) {}
 
   return (
-    <Stack>
+    <Stack data-testid="data-new-value">
       <Title order={2}>Keys</Title>
 
       <Title order={3}>New Value</Title>
