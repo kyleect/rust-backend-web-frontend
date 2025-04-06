@@ -30,6 +30,9 @@ jobs:
       - name: "Install NPM Deps: client"
         working-directory: client
         run: npm ci
+      - name: "Install NPM Deps: e2e"
+        working-directory: e2e
+        run: npm ci && npx playwright install --with-deps
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
@@ -67,6 +70,9 @@ jobs:
       - name: "Install NPM Deps: client"
         working-directory: client
         run: npm ci
+      - name: "Install NPM Deps: e2e"
+        working-directory: e2e
+        run: npm ci && npx playwright install --with-deps
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
@@ -103,6 +109,9 @@ jobs:
       - name: "Install NPM Deps: client"
         working-directory: client
         run: npm ci
+      - name: "Install NPM Deps: e2e"
+        working-directory: e2e
+        run: npm ci && npx playwright install --with-deps
       - name: Install just
         uses: taiki-e/install-action@v2
         with:
