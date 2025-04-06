@@ -64,7 +64,7 @@ export class DataView {
     return new DataByKeyValueView(key, this.page);
   }
 
-  public async gotoSecretByKey(key: string): Promise<DataByKeyValueView> {
+  public async gotoSecretByKey(key: string): Promise<DataByKeyValueSecretView> {
     await this.keysTable
       .getByRole("link", {
         name: `${key} 🔒`,
@@ -74,7 +74,7 @@ export class DataView {
 
     await this.page.waitForURL(`http://localhost:3000/#/data/key/${key}`);
 
-    return new DataByKeyValueView(key, this.page);
+    return new DataByKeyValueSecretView(key, this.page);
   }
 
   public async gotoAddNewValue(): Promise<AddNewValueView> {
@@ -130,7 +130,7 @@ export class DataByKeyValueView {
       `http://localhost:3000/#/data/key/${this.key}/edit`
     );
 
-    return new EditView(this.page);
+    return new EditView(this.key, this.page);
   }
 }
 
@@ -175,7 +175,7 @@ export class DataByKeyValueSecretView {
       `http://localhost:3000/#/data/key/${this.key}/edit`
     );
 
-    return new EditView(this.page);
+    return new EditView(this.key, this.page);
   }
 }
 
@@ -187,7 +187,7 @@ export class EditView {
   readonly warningTitle: Locator;
   readonly warningBody: Locator;
 
-  constructor(private readonly page: Page) {
+  constructor(readonly key: string, private readonly page: Page) {
     this.root = page.getByTestId("data-edit");
     this.schemaInput = this.root.getByLabel("Schema");
     this.valueInput = this.root.getByLabel("Value");
@@ -197,6 +197,37 @@ export class EditView {
     this.warningBody = this.root.getByText(
       "Please delete and re-add secret with the desired value."
     );
+  }
+
+  public async fillSchema(schema: string): Promise<this> {
+    await this.schemaInput.fill(schema);
+    return this;
+  }
+
+  public async expectSchema(schema: string): Promise<void> {
+    await expect(this.schemaInput).toHaveValue(schema);
+  }
+
+  public async fillValue(value: string): Promise<this> {
+    await this.valueInput.fill(value);
+    return this;
+  }
+
+  public async expectValue(value: string): Promise<void> {
+    await expect(this.valueInput).toHaveValue(value);
+  }
+
+  public async fill(schema: string, value: string): Promise<this> {
+    await this.fillSchema(schema);
+    await this.fillValue(value);
+    return this;
+  }
+
+  public async save(): Promise<DataByKeyValueView> {
+    await this.saveButton.click();
+    await this.page.waitForURL(`http://localhost:3000/#/data/key/${this.key}`);
+
+    return new DataByKeyValueView(this.key, this.page);
   }
 }
 

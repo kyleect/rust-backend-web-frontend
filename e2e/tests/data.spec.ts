@@ -18,7 +18,7 @@ test("has keys title", async ({}) => {
 test("can create value", async ({}) => {
   const expectedKey = "Foo";
   const expectedSchema = '{"type": "string"}';
-  const expectedSecret = '"Bar"';
+  const expectedValue = '"Bar"';
 
   let dataView = await root.gotoData();
 
@@ -26,7 +26,7 @@ test("can create value", async ({}) => {
 
   await addNewValueView.fillKey(expectedKey);
   await addNewValueView.expectSchema(expectedSchema);
-  await addNewValueView.fillValue(expectedSecret);
+  await addNewValueView.fillValue(expectedValue);
 
   await expect(addNewValueView.root).not.toContainText("Secrets are immutable");
   await expect(addNewValueView.root).not.toContainText(
@@ -37,7 +37,7 @@ test("can create value", async ({}) => {
 
   await expect(valueByKeyView.keyText).toContainText(expectedKey);
   await expect(valueByKeyView.schemaText).toContainText(`{"type": "string"}`);
-  await expect(valueByKeyView.valueText).toContainText(expectedSecret);
+  await expect(valueByKeyView.valueText).toContainText(expectedValue);
 
   await expect(valueByKeyView.deleteButton).toBeVisible();
   await expect(valueByKeyView.editButton).toBeVisible();
@@ -51,9 +51,19 @@ test("can create value", async ({}) => {
   await expect(editValueView.valueInput).toBeVisible();
   await expect(editValueView.saveButton).toBeVisible();
 
+  await editValueView.expectSchema(expectedSchema);
+  await editValueView.expectValue(expectedValue);
+
+  await editValueView.fillSchema(`{"type": "number"}`);
+  await editValueView.fillValue("123");
+  await editValueView.save();
+
   dataView = await root.gotoData();
 
-  await dataView.gotoValueByKey(expectedKey);
+  let valueByKeyView2 = await dataView.gotoValueByKey(expectedKey);
+  await expect(valueByKeyView2.keyText).toContainText(expectedKey);
+  await expect(valueByKeyView2.schemaText).toContainText(`{"type": "number"}`);
+  await expect(valueByKeyView2.valueText).toContainText("123");
 });
 
 test("can create secret", async ({}) => {
@@ -74,7 +84,7 @@ test("can create secret", async ({}) => {
     "Secrets can't be edited after creation. You'll need to delete and recreate them with new value."
   );
 
-  const secretByKeyView = await addNewSecretView.save();
+  let secretByKeyView = await addNewSecretView.save();
 
   await expect(secretByKeyView.keyText).toContainText(expectedKey);
   await expect(secretByKeyView.schemaText).toContainText(expectedSchema);
@@ -105,5 +115,9 @@ test("can create secret", async ({}) => {
 
   dataView = await root.gotoData();
 
-  dataView.gotoSecretByKey(expectedKey);
+  secretByKeyView = await dataView.gotoSecretByKey(expectedKey);
+  await expect(secretByKeyView.keyText).toContainText(expectedKey);
+  await expect(secretByKeyView.schemaText).toContainText(expectedSchema);
+  await expect(secretByKeyView.valueText).toContainText(`********`);
+  await expect(secretByKeyView.valueText).not.toContainText(expectedSecret);
 });
