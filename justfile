@@ -126,7 +126,7 @@ clean-git-branches:
     git branch -d $(git branch --merged=main | grep -v main) && git fetch --prune
 
 e2e: build-release
-  cd e2e && npm run test
+  cd e2e && just test
 
 e2e-report:
   cd e2e && npm run report

@@ -64,8 +64,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    cwd: "../",
-    command: "target/release/server --port=3000 --open false",
+    command: "just run-server",
     url: "http://127.0.0.1:3000",
     reuseExistingServer: false,
   },
