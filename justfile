@@ -125,22 +125,8 @@ test:
 clean-git-branches:
     git branch -d $(git branch --merged=main | grep -v main) && git fetch --prune
 
-e2e:
-  #!/usr/bin/env sh
-
-  just build-release
-
-  ./target/release/server --port 3000 --open false &
-  SERVER_PID=$!
-
-  echo "Server started on process id $SERVER_PID"
-  
-  cd e2e
-  npm run test
-
-  echo "Killing Server started at process id $SERVER_PID"
-
-  kill $SERVER_PID
+e2e: build-release
+  cd e2e && npm run test
 
 e2e-report:
   cd e2e && npm run report

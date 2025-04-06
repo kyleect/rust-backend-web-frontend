@@ -12,9 +12,9 @@ export class RootView {
   }
 
   public async goto(): Promise<RootView> {
-    await this.page.goto("http://localhost:3000");
+    await this.page.goto("/");
 
-    await this.page.waitForURL(`http://localhost:3000/`);
+    await this.page.waitForURL(`/`);
 
     await expect(this.root).toBeVisible();
 
@@ -24,7 +24,7 @@ export class RootView {
   public async gotoData(): Promise<DataView> {
     await this.dataLink.click();
 
-    await this.page.waitForURL(`http://localhost:3000/#/data`);
+    await this.page.waitForURL(`/#/data`);
 
     return new DataView(this.page);
   }
@@ -59,7 +59,7 @@ export class DataView {
       })
       .click();
 
-    await this.page.waitForURL(`http://localhost:3000/#/data/key/${key}`);
+    await this.page.waitForURL(`/#/data/key/${key}`);
 
     return new DataByKeyValueView(key, this.page);
   }
@@ -72,7 +72,7 @@ export class DataView {
       })
       .click();
 
-    await this.page.waitForURL(`http://localhost:3000/#/data/key/${key}`);
+    await this.page.waitForURL(`/#/data/key/${key}`);
 
     return new DataByKeyValueSecretView(key, this.page);
   }
@@ -80,7 +80,7 @@ export class DataView {
   public async gotoAddNewValue(): Promise<AddNewValueView> {
     await this.addNewValueLink.click();
 
-    await this.page.waitForURL("http://localhost:3000/#/data/new");
+    await this.page.waitForURL("/#/data/new");
 
     return new AddNewValueView(this.page);
   }
@@ -88,7 +88,7 @@ export class DataView {
   public async gotoAddNewSecret(): Promise<AddNewSecretView> {
     await this.addSecretValueLink.click();
 
-    await this.page.waitForURL("http://localhost:3000/#/data/new_secret");
+    await this.page.waitForURL("/#/data/new_secret");
 
     return new AddNewSecretView(this.page);
   }
@@ -126,9 +126,7 @@ export class DataByKeyValueView {
   public async gotoEdit(): Promise<EditView> {
     await this.editButton.click();
 
-    await this.page.waitForURL(
-      `http://localhost:3000/#/data/key/${this.key}/edit`
-    );
+    await this.page.waitForURL(`/#/data/key/${this.key}/edit`);
 
     return new EditView(this.key, this.page);
   }
@@ -169,11 +167,9 @@ export class DataByKeyValueSecretView {
   }
 
   public async gotoEdit(): Promise<EditView> {
-    await this.page.goto(`http://localhost:3000/#/data/key/${this.key}/edit`);
+    await this.page.goto(`/#/data/key/${this.key}/edit`);
 
-    await this.page.waitForURL(
-      `http://localhost:3000/#/data/key/${this.key}/edit`
-    );
+    await this.page.waitForURL(`/#/data/key/${this.key}/edit`);
 
     return new EditView(this.key, this.page);
   }
@@ -225,7 +221,7 @@ export class EditView {
 
   public async save(): Promise<DataByKeyValueView> {
     await this.saveButton.click();
-    await this.page.waitForURL(`http://localhost:3000/#/data/key/${this.key}`);
+    await this.page.waitForURL(`/#/data/key/${this.key}`);
 
     return new DataByKeyValueView(this.key, this.page);
   }
@@ -281,7 +277,7 @@ export class AddNewValueView {
     const key = await this.keyInput.inputValue();
 
     await this.saveButton.click();
-    await this.page.waitForURL(`http://localhost:3000/#/data/key/${key}`);
+    await this.page.waitForURL(`/#/data/key/${key}`);
 
     return new DataByKeyValueView(key, this.page);
   }
@@ -337,7 +333,7 @@ export class AddNewSecretView {
     const key = await this.keyInput.inputValue();
 
     await this.saveButton.click();
-    await this.page.waitForURL(`http://localhost:3000/#/data/key/${key}`);
+    await this.page.waitForURL(`/#/data/key/${key}`);
 
     return new DataByKeyValueSecretView(key, this.page);
   }
