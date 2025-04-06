@@ -42,7 +42,14 @@ test("can create value", async ({}) => {
   await expect(valueByKeyView.deleteButton).toBeVisible();
   await expect(valueByKeyView.editButton).toBeVisible();
 
-  await valueByKeyView.gotoEdit();
+  const editValueView = await valueByKeyView.gotoEdit();
+
+  await expect(editValueView.warningTitle).not.toBeVisible();
+  await expect(editValueView.warningBody).not.toBeVisible();
+
+  await expect(editValueView.schemaInput).toBeVisible();
+  await expect(editValueView.valueInput).toBeVisible();
+  await expect(editValueView.saveButton).toBeVisible();
 
   dataView = await root.gotoData();
 
@@ -89,14 +96,12 @@ test("can create secret", async ({}) => {
 
   const editSecretView = await secretByKeyView.gotoEdit();
 
-  await expect(
-    editSecretView.root.getByText("Secrets can't be edited!")
-  ).toBeVisible();
-  await expect(
-    editSecretView.root.getByText(
-      "Please delete and re-add secret with the desired value."
-    )
-  ).toBeVisible();
+  await expect(editSecretView.warningTitle).toBeVisible();
+  await expect(editSecretView.warningBody).toBeVisible();
+
+  await expect(editSecretView.schemaInput).not.toBeVisible();
+  await expect(editSecretView.valueInput).not.toBeVisible();
+  await expect(editSecretView.saveButton).not.toBeVisible();
 
   dataView = await root.gotoData();
 

@@ -123,14 +123,14 @@ export class DataByKeyValueView {
     this.deleteButton = this.root.getByText("Delete");
   }
 
-  public async gotoEdit(): Promise<DataEditView> {
+  public async gotoEdit(): Promise<EditView> {
     await this.editButton.click();
 
     await this.page.waitForURL(
       `http://localhost:3000/#/data/key/${this.key}/edit`
     );
 
-    return new DataEditView(this.page);
+    return new EditView(this.page);
   }
 }
 
@@ -168,22 +168,35 @@ export class DataByKeyValueSecretView {
     return this;
   }
 
-  public async gotoEdit(): Promise<DataEditView> {
+  public async gotoEdit(): Promise<EditView> {
     await this.page.goto(`http://localhost:3000/#/data/key/${this.key}/edit`);
 
     await this.page.waitForURL(
       `http://localhost:3000/#/data/key/${this.key}/edit`
     );
 
-    return new DataEditView(this.page);
+    return new EditView(this.page);
   }
 }
 
-export class DataEditView {
+export class EditView {
   readonly root: Locator;
+  readonly schemaInput: Locator;
+  readonly valueInput: Locator;
+  readonly saveButton: Locator;
+  readonly warningTitle: Locator;
+  readonly warningBody: Locator;
 
   constructor(private readonly page: Page) {
     this.root = page.getByTestId("data-edit");
+    this.schemaInput = this.root.getByLabel("Schema");
+    this.valueInput = this.root.getByLabel("Value");
+    this.saveButton = this.root.getByText("Save");
+
+    this.warningTitle = this.root.getByText("Secrets can't be edited!");
+    this.warningBody = this.root.getByText(
+      "Please delete and re-add secret with the desired value."
+    );
   }
 }
 
