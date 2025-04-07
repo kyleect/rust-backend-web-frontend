@@ -26,7 +26,18 @@ test("can create value", async ({}) => {
 
   await addNewValueView.fillKey(expectedKey);
   await addNewValueView.expectSchema(expectedSchema);
+
+  await addNewValueView.fillValue("123");
+
+  await expect(addNewValueView.root.getByTestId("invalid-value")).toHaveText(
+    "instance is not of a type(s) string"
+  );
+
   await addNewValueView.fillValue(expectedValue);
+
+  await expect(
+    addNewValueView.root.getByTestId("invalid-value")
+  ).not.toBeVisible();
 
   await expect(addNewValueView.root).not.toContainText("Secrets are immutable");
   await expect(addNewValueView.root).not.toContainText(
@@ -36,7 +47,7 @@ test("can create value", async ({}) => {
   const valueByKeyView = await addNewValueView.save();
 
   await expect(valueByKeyView.keyText).toContainText(expectedKey);
-  await expect(valueByKeyView.schemaText).toContainText(`{"type": "string"}`);
+  await expect(valueByKeyView.schemaText).toContainText(expectedSchema);
   await expect(valueByKeyView.valueText).toContainText(expectedValue);
 
   await expect(valueByKeyView.deleteButton).toBeVisible();
@@ -54,8 +65,18 @@ test("can create value", async ({}) => {
   await editValueView.expectSchema(expectedSchema);
   await editValueView.expectValue(expectedValue);
 
-  await editValueView.fillSchema(`{"type": "number"}`);
   await editValueView.fillValue("123");
+
+  await expect(editValueView.root.getByTestId("invalid-value")).toHaveText(
+    "instance is not of a type(s) string"
+  );
+
+  await editValueView.fillSchema(`{"type": "number"}`);
+
+  await expect(
+    editValueView.root.getByTestId("invalid-value")
+  ).not.toBeVisible();
+
   await editValueView.save();
 
   dataView = await root.gotoData();
@@ -77,7 +98,18 @@ test("can create secret", async ({}) => {
 
   await addNewSecretView.fillKey(expectedKey);
   await addNewSecretView.expectSchema(expectedSchema);
+
+  await addNewSecretView.fillValue("123");
+
+  await expect(addNewSecretView.root.getByTestId("invalid-value")).toHaveText(
+    "instance is not of a type(s) string"
+  );
+
   await addNewSecretView.fillValue(expectedSecret);
+
+  await expect(
+    addNewSecretView.root.getByTestId("invalid-value")
+  ).not.toBeVisible();
 
   await expect(addNewSecretView.root).toContainText("Secrets are immutable");
   await expect(addNewSecretView.root).toContainText(

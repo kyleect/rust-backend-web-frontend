@@ -139,7 +139,9 @@ function RouteComponent() {
           )}
 
           {hasValidationErrors && (
-            <Alert color="red">{validationErrorsString}</Alert>
+            <Alert color="red" data-testid="invalid-value">
+              {validationErrorsString}
+            </Alert>
           )}
 
           <ButtonGroup>
