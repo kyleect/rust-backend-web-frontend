@@ -29,7 +29,10 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           react: ["react", "react-dom"],
           tanstack: ["@tanstack/react-router", "@tanstack/react-query"],
-          mantine: ["@mantine/core", "@mantine/hooks"],
+          mantine_core: ["@mantine/core"],
+          mantine_hooks: ["@mantine/hooks"],
+          mantine_codehighlight: ["@mantine/code-highlight"],
+          mantine_notifactions: ["@mantine/notifications"],
         },
       },
     },
